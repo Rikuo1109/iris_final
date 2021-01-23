@@ -1,0 +1,3 @@
+REMOVE  = 'R'
+WAITING = 'W'
+ACTIVE  = 'A'
