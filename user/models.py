@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser
 )
 
-from abstract import BaseModel
+from abstract.models import BaseModel
 
 # Create your models here.
 
