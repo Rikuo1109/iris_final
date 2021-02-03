@@ -5,6 +5,7 @@ from datetime import timedelta
 # Add more apps to project
 INSTALLED_APPS += [
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
 
     'corsheaders',
 

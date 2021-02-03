@@ -9,6 +9,9 @@ class UserServices(object):
         except User.DoesNotExist:
             raise Http404
 
+    def _create_user(self, email, password):
+        return User.objects.create_user(email=email, password=password)
+
     def _check_password(self, user, password):
         return user.check_password(password)
 
@@ -26,12 +29,20 @@ class UserServices(object):
     def _active(self, id):
         try:
             user = User.objects.get(id=id)
+            print(user)
             if not (user.status == status.REMOVE):
                 user.status = status.ACTIVE
             user.save()
         except Exception as e:
             print(e)
 
+    def _reset_password(self, id, password):
+        try:
+            user = User.objects.get(id=id)
+            self._change_password(user, password)
+        except Exception as e:
+            print(e)
+            raise e
 
 services = UserServices()
 
