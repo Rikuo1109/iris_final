@@ -22,7 +22,7 @@ class Email(object):
 
     @subject.setter
     def subject(self, value = SAMPLE_SUBJECT):
-        self._subject = subject
+        self._subject = value
 
 class EmailSender(object):
     def __init__(self, subject = SAMPLE_SUBJECT, body = SAMPLE_BODY):
