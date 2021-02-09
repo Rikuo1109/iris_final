@@ -1,24 +1,31 @@
 from rest_framework.views import APIView
+from constant.status_code import SUCCESS
 from django.http import JsonResponse
-from constant import errorCode
 
-class BaseView(APIView):
-    def __init__(self, *args, **kwargs):
-        self._data = None
-        self._code = errorCode.SUCCESS
-        super(BaseView, self).__init__(*args, **kwargs)
+class Response:
+    def __init__(self, data = None, code = SUCCESS):
+        self._data = data
+        self._code = code
 
-    def get_response(self):
+    def _get(self):
         return JsonResponse(
-            data={
+            {
                 'data': self._data,
                 'code': self._code
             }
         )
 
-    def set_response(self, value):
-        try:
-            self._data, self._code = value
-        except:
-            raise ValueError(f'Can not unpack {value} to response')
+    def _set(self, data = None, code = SUCCESS):
+        self._data = data
+        self._code = code
 
+class BaseView(APIView):
+    def __init__(self):
+        self._response = Response()
+
+    def _set(self, value):
+        self._response._set(*value)
+    
+    def _get(self):
+        return self._response._get()
+        

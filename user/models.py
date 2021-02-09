@@ -40,7 +40,7 @@ class BaseUserManager(BUM):
             
         )
 
-        from constant import status
+        from constant import STATUS_CHOICES as status
         user.is_superuser = True
         user.status = status.ACTIVE
         user.save(using=self._db)
