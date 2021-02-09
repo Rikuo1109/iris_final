@@ -8,16 +8,14 @@ from django.db.models.fields import (
 # )
 
 from constant import (
-    STATUS_CHOICE,
+    STATUS_CHOICES
 )
-
-from constant.status import WAITING
 
 class StatusField(CharField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 1
-        kwargs['choices'] = STATUS_CHOICE
-        kwargs['default'] = WAITING
+        kwargs['choices'] = STATUS_CHOICES.choices
+        kwargs['default'] = STATUS_CHOICES.WAITING
         super().__init__(*args, **kwargs)
 
     

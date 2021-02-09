@@ -70,7 +70,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
     def save(self, *args, **kwargs):
-        from constant import status
+        from constant import STATUS_CHOICES as status
         if self.status == status.REMOVE or self.status == status.WAITING:
             self.is_active = False
         else:

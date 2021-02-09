@@ -8,7 +8,9 @@ INSTALLED_APPS += [
 
     'corsheaders',
 
-    'user'
+    'user',
+
+    'item'
 ]
 
 CORS_ALLOW_ALL_HOST = True

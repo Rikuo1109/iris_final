@@ -1,7 +1,6 @@
-from .status import *
+from django.db import models
 
-STATUS_CHOICE = (
-    (REMOVE,  REMOVE),
-    (WAITING, WAITING),
-    (ACTIVE,  ACTIVE)
-)
+class STATUS_CHOICES(models.TextChoices):
+    REMOVE  = 'R'
+    WAITING = 'W'
+    ACTIVE  = 'A'
