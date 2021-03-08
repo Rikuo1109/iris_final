@@ -1,0 +1,19 @@
+.default-index-item {
+    padding: 6px 12px;
+    border-radius: 12px;
+    min-height: 36px;
+    div {
+        text-decoration: none;
+        color: black;
+    }
+    a {
+        display: flex;
+        justify-content: space-between;
+        border-radius: 6px;
+        line-height: 24px;
+    }
+}
+.default-index-item:hover,
+.default-index-item.focus {
+    background: rgba($color: lightblue, $alpha: 0.5)
+}

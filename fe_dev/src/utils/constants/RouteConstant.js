@@ -1,0 +1,23 @@
+const ROUTE_ROOT = '/'
+const ROUTE_LOGIN = '/dang-nhap'
+const ROUTE_SIGNIN = '/dang-ki'
+const ROUTE_RESETPASSWORD = '/reset'
+
+const SHORT_BOOK_DETAIL = '/chi-tiet'
+const ROUTE_BOOK_DETAIL = '/chi-tiet/:bookID'
+
+const SHORT_BOOK_CATEGORY = '/the-loai'
+const ROUTE_BOOK_CATEGORY = '/the-loai/:categoryPath'
+
+const ROUTE_ADMIN = '/quan-ly'
+export const routeConstants = {
+    ROUTE_ROOT,
+    ROUTE_LOGIN,
+    ROUTE_SIGNIN,
+    ROUTE_RESETPASSWORD,
+    SHORT_BOOK_DETAIL,
+    ROUTE_BOOK_DETAIL,
+    SHORT_BOOK_CATEGORY,
+    ROUTE_BOOK_CATEGORY,
+    ROUTE_ADMIN,
+}

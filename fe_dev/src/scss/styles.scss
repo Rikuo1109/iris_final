@@ -1,0 +1,27 @@
+$fontRegular: 'Inter-regular';
+$fontBold: 'Inter-bold';
+$fontMedium: 'Inter-medium';
+$fontSemibold: 'Inter-semibold';
+$textOne: #222222;
+$textTwo: #797979;
+$textDisable: #ACACAC;
+$line:#D0D0D0;
+$line40:#E6E6E6;
+
+$lg-origin: #3E5A82;
+
+
+@import 'common';
+@import 'utils';
+@import 'header';
+@import 'search';
+@import 'iatbutton';
+@import 'detailPage';
+@import 'productPage';
+@import 'indexItem';
+@import 'background';
+@import 'field';
+@import 'accountPage';
+@import 'productGrid';
+@import 'footer';
+@import 'admin';

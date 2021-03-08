@@ -1,0 +1,32 @@
+.product-grid-wrapper{
+    width: 100%;
+    .title {
+        padding: 0px 12px;
+    }
+}
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    a{
+        text-decoration: none;
+        color: inherit;
+        width: 232px;
+    }
+    img{
+        max-width: 84%;
+        margin-left: 8%;
+    }
+}
+.product-item {
+    padding: 12px;
+    >*{
+        margin-bottom: 12px;
+    }
+    >*:last-child{
+        margin-bottom: 0px;
+    }
+}
+.product-item:hover{
+    box-shadow: 0 0 1px 1px #ccc;
+}

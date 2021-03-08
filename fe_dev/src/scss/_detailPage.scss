@@ -1,0 +1,112 @@
+$imageHeight: 60vh;
+.rate-detail{
+    display: flex;
+    >*{
+        margin-right: 6px;
+    }
+    .rate-count{
+        font-size: 12px;
+    }
+}
+.book-title{
+    font-size: 18px;
+}
+.info-detail {
+    display: flex;
+}
+.info-image {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 50%;
+    padding: 12px;
+    .main-image-wrapper{
+        width: $imageHeight;
+        height: $imageHeight;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .main-image {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    .small-image {
+        width: 64px;
+        height: 64px;
+        border-radius: 3px;
+    }
+    .small-image-wrapper{
+        width: 66px;
+        height: 66px;
+        border-radius: 3px;
+    }
+    .small-image-wrapper.actived {
+        border: blue 1px solid;
+    }
+    .small-image-wrapper:hover {
+        box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    }
+    .list-image{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: $imageHeight;
+        flex-wrap: wrap;
+    }
+}
+.info-table {
+    width: 50%;
+    padding: 24px;
+}
+.info-row {
+    display: flex;
+    position: relative;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px rgba($color: #000000, $alpha: 0.2) solid;
+    >div:last-child{
+        position: absolute;
+        left:50%;
+    }
+}
+.price {
+    font-size: 14px;
+    color:#c00;
+}
+.discount {
+    font-size: 12px;
+}
+.info-row:first-child {
+    font-size: 16px;
+    >div:last-child {
+        left:unset;
+        right: 0px; 
+    }
+}
+.description.collapsed {
+    max-height: 40vh;
+    overflow-y: hidden;
+}
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    .common-content-wrapper {
+        width: calc(50% - 6px);
+    }
+    .common-content-wrapper:only-child {
+        width: 70%;
+    }
+}
+.reviews {
+    padding: 12px;
+}
+.review-wrapper{
+    border-bottom: 1px rgba($color: $textTwo, $alpha: 0.2) solid;
+    .row-wrapper{
+        display: flex;
+        >*{
+            margin-right: 6x;
+        }
+    }
+}

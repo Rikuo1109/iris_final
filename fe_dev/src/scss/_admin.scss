@@ -1,0 +1,20 @@
+.admin-page {
+    margin-top: 12px;
+    height: calc(100vh - 68px);
+}
+.admin-navigator{
+    background-color: white;
+    min-width: 200px;
+    max-width: 360px;
+    width: 20%;
+    height: 100%;
+    padding: 24px;
+    >div {
+        margin-bottom: 24px;
+    }
+}
+.default-iatbutton {
+    >*{
+        margin-left: 12px;
+    }
+}

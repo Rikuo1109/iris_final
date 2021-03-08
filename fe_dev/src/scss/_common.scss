@@ -1,0 +1,121 @@
+@font-face {
+    font-family: 'Inter-bold';
+    src: url('../assets/fonts/Inter/Inter-Bold.otf');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter-regular';
+    src: url('../assets/fonts/Inter/Inter-Regular.otf');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter-medium';
+    src: url('../assets/fonts/Inter/Inter-Medium.otf');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter-semibold';
+    src: url('../assets/fonts/Inter/Inter-SemiBold.otf');
+    font-display: swap;
+}
+
+html body {
+    margin: 0;
+    font-family: 'Inter-regular',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        'Roboto',
+        'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    columns: #222222;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100vh;
+    min-height: -webkit-fill-available;
+}
+
+.common-wrapper {
+    background-color: white;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.page-wrapper {
+    background-color: #EEFFFF;
+}
+
+.flexbox {
+    display: flex;
+}
+
+.content-title {
+    font-size:20px;
+    height: 36px;
+    width: 100%;
+    padding: 6px 12px 6px 24px;
+    display: flex;
+    justify-content: space-between;
+}
+.textTwo {
+    color: $textTwo;
+}
+.textRight {
+    text-align: right;
+}
+.hide {
+    display: none;
+}
+#main-page {
+    background: rgba($color: #EEFFFF, $alpha: 0.75);
+}
+.page-content{
+    min-height: calc(100vh - 56px - 220px);
+}
+.pointer {
+    cursor: pointer;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+.common-content-wrapper {
+    .title{
+        padding-left: 12px;
+        margin-bottom: 12px;
+    }
+    height: fit-content;
+    background: white;
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    box-shadow: 0 0 2px 2px rgba($color: #CCC, $alpha: 0.5);
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    min-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 6px 0px;
+    z-index: 0;
+}
+
+.text-link{
+    font-style: italic;
+    color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    font-style: italic;
+}
