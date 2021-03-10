@@ -8,7 +8,7 @@ PAGE_SIZE = 10
 
 class Pagination(pagination.PageNumberPagination):
 
-    def get_page_size
+    # def get_page_size
 
     def get_paginated_response(self, data, page_size):
         pass
