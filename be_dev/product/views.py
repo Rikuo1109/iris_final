@@ -34,15 +34,47 @@ class PopularProduct(generics.ListAPIView):
     queryset = models.Book.objects.all()
     serializer_class = serializers.ItemSerializer
     permission_classes = (permissions.AllowAny, )
-    filter_backends = [filters.SearchFilter, product_filters.PriceFilter]
+    filter_backends = [filters.SearchFilter, product_filters.PriceFilter, \
+                        product_filters.AuthorFilters,
+                         product_filters.CategoryFilter,
+                         product_filters.PublisherFilter,
+                         product_filters.RatingFilter,]
     search_fields = ['name']
     pagination_classes = pagination.PageNumberPagination
     # filter_backends = ()
 
     def list(self, request):
         from django.http import JsonResponse
-        data = super().list(request).data
+        try:
+            data = super().list(request).data
+            return JsonResponse({
+                'data': data, 
+                'error_code':0
+            })
+        except Exception as e:
+            print(f"Exception while filtering: {e}")
         return JsonResponse({
-            'data': data,
-            'error_code':0
-        })
+                'data': None,
+                'error_code':0
+            })
+
+class CategoryTree(generics.ListAPIView):
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    def list(self, request):
+        from django.http import JsonResponse
+        data = super().list(request).data["results"]
+        category_names = [d["name"] for d in data]
+        category_tree = {}
+        for idx, category_name in enumerate(category_names):
+            category_tree[category_name] = {"children": [], "uid": data[idx]["uid"]}
+        for category in data:
+            if category["parent"]:
+                category_tree[category_names[category["parent"] - 1]]["children"].append({category["name"]: category_tree[category["name"]]})
+        # print(category_tree)
+        response_data = {"root" : category_tree["root"]}
+
+        return JsonResponse({
+                'data': response_data,
+                'error_code':0
+            })

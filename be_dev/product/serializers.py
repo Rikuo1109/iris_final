@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Book, Category
+from .models import Book, Category, Author
 
 PAGE_NUMBER = 1
 PAGE_SIZE = 10
@@ -31,11 +31,16 @@ class ItemListSerializer(serializers.Serializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = ('uid', 'name', 'parent')
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
         fields = ('uid', 'name')
 
 class ItemSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(read_only=True, many=True)
-
+    authors = AuthorSerializer(read_only=True, many=True)
     class Meta:
         model = Book
         fields = '__all__'
