@@ -2,6 +2,7 @@ const ROUTE_ROOT = '/'
 const ROUTE_LOGIN = '/dang-nhap'
 const ROUTE_SIGNIN = '/dang-ki'
 const ROUTE_RESETPASSWORD = '/reset'
+const ROUTE_CHANGEPASSWORD = '/doi-mat-khau'
 
 const SHORT_BOOK_DETAIL = '/chi-tiet'
 const ROUTE_BOOK_DETAIL = '/chi-tiet/:bookID'
@@ -15,6 +16,7 @@ export const routeConstants = {
     ROUTE_LOGIN,
     ROUTE_SIGNIN,
     ROUTE_RESETPASSWORD,
+    ROUTE_CHANGEPASSWORD,
     SHORT_BOOK_DETAIL,
     ROUTE_BOOK_DETAIL,
     SHORT_BOOK_CATEGORY,

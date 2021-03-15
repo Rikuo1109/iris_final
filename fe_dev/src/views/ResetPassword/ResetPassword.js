@@ -6,7 +6,6 @@ import FieldType from '../../utils/constants/enums/FieldType'
 import { routeConstants } from '../../utils/constants/RouteConstant'
 import Field from '../../utils/field/Field'
 import { Helmet } from 'react-helmet';
-import { ProfileServices } from '../../services/ProfileServices'
 
 export default class ResetPassWord extends PureComponent {
     constructor(props) {

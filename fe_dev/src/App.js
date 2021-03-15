@@ -26,6 +26,10 @@ const ResetPassWord = Loadable({
     loading: LoadingPage,
 })
 
+const ChangePassWord = Loadable({
+    loader: () => import('./views/ChangePassword/ChangePassword'),
+    loading: LoadingPage,
+})
 const BookCategory = Loadable({
     loader: () => import('./views/bookList/bookList'),
     loading: LoadingPage,
@@ -54,6 +58,7 @@ class App extends PureComponent {
                             <Route path={routeConstants.ROUTE_LOGIN} exact name='Login' component={Login} />
                             <Route path={routeConstants.ROUTE_SIGNIN} exact name='Sign in' component={Signin} />
                             <Route path={routeConstants.ROUTE_RESETPASSWORD} exact name='Reset Password' component={ResetPassWord} />
+                            <Route path={routeConstants.ROUTE_CHANGEPASSWORD} exact name='Change Password' component={ChangePassWord} />
                             <Route path={routeConstants.ROUTE_BOOK_DETAIL} exact name='Book Detail' component={BookDetails} />
                             <Route path={routeConstants.ROUTE_BOOK_CATEGORY} exact name='Book Category' component={BookCategory} />
                             <Route path={routeConstants.ROUTE_ADMIN} exact name='Admin' component={Admin} />

@@ -8,7 +8,6 @@ import AuthorFilter from './AuthorFilter';
 import { AuthorServices } from '../services/AuthorServices';
 import ProductGrid from './ProductGrid';
 import { ProductServices } from '../services/ProductServices';
-import ProfileContext from '../context/ProfileContext';
 export default class ProductsPage extends PureComponent {
     constructor(props) {
         super(props);

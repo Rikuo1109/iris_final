@@ -4,32 +4,39 @@ import IconAndTextButton from '../../utils/IconAndTextButton'
 
 export default class AdminNavigator extends PureComponent {
     render() {
+        const navList = [
+            {
+                type: AdminNavType.BOOK,
+                icon: 'book-icon',
+                text: 'Sách',
+            },
+            {
+                type: AdminNavType.USER,
+                icon: 'person-icon',
+                text: 'Người dùng',
+            },
+            {
+                type: AdminNavType.CATEGORY,
+                icon: 'category-icon',
+                text: 'Thể loại',
+            },
+            {
+                type: AdminNavType.AUTHOR,
+                icon: 'person-icon',
+                text: 'Tác giả',
+            },
+        ]
         return (
             <div class='admin-navigator'>
-                <IconAndTextButton
-                    texts={[{ text: 'Sách' }]}
-                    icons={[{ icon: 'book-icon icon24' }]}
-                    click={() => this.props.setActive(AdminNavType.BOOK)}
-                    className={this.props.active === AdminNavType.BOOK ? 'active' : ''}
-                />
-                <IconAndTextButton
-                    texts={[{ text: 'Người dùng' }]}
-                    icons={[{ icon: '' }]}
-                    click={() => this.props.setActive(AdminNavType.USER)}
-                    className={this.props.active === AdminNavType.USER ? 'active' : ''}
-                />
-                <IconAndTextButton
-                    texts={[{ text: 'Thể loại' }]}
-                    icons={[{ icon: '' }]}
-                    click={() => this.props.setActive(AdminNavType.CATEGORY)}
-                    className={this.props.active === AdminNavType.CATEGORY ? 'active' : ''}
-                />
-                <IconAndTextButton
-                    texts={[{ text: 'Tác giả' }]}
-                    icons={[{ icon: '' }]}
-                    click={() => this.props.setActive(AdminNavType.AUTHOR)}
-                    className={this.props.active === AdminNavType.AUTHOR ? 'active' : ''}
-                />
+                {navList.map(item =>
+                    <IconAndTextButton
+                        key={item.type}
+                        texts={[{ text: item.text }]}
+                        icons={[{ icon: `icon24 ${item.icon}` }]}
+                        click={() => this.props.setActive(item.type)}
+                        className={this.props.active === item.type ? 'active' : ''}
+                    />)
+                }
             </div>
         )
     }

@@ -7,39 +7,18 @@ import { routeConstants } from '../../utils/constants/RouteConstant'
 import Field from '../../utils/field/Field'
 import { Helmet } from 'react-helmet';
 
-export default class Signin extends PureComponent {
+export default class ChangePassWord extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             redirect: '',
-            email: '',
             password: '',
-            repassword: '',
-            emailError: null,
+            newPassword: '',
+            reNewPassword: '',
             passwordError: null,
-            repasswordError: null,
+            newPasswordError: null,
+            reNewPasswordError: null,
             isSubmitting: false,
-        }
-    }
-    validateEmail = value => {
-        if (value === void 0) {
-            value = this.state.email
-        }
-        if (value === '') {
-            this.setState({
-                emailError: 'Nhập email của bạn.',
-            });
-            return false;
-        } else if ((/\S+@\S+\.\S+/.test(value)) === false) {
-            this.setState({
-                emailError: 'Email của bạn không hợp lệ',
-            });
-            return false;
-        } else {
-            this.setState({
-                emailError: null,
-            });
-            return true
         }
     }
 
@@ -49,7 +28,7 @@ export default class Signin extends PureComponent {
         }
         if (value === '') {
             this.setState({
-                passwordError: 'Nhập mật khẩu của bạn',
+                passwordError: 'Nhập mật khẩu hiện tại của bạn',
             });
             return false;
         } else {
@@ -59,42 +38,58 @@ export default class Signin extends PureComponent {
             return true
         }
     }
-    validateRepassword = (value) => {
+    validateNewPassword = (value) => {
         if (value === void 0) {
-            value = this.state.repassword
+            value = this.state.newPassword
         }
         if (value === '') {
             this.setState({
-                repasswordError: 'Nhập lại mật khẩu của bạn',
+                newPasswordError: 'Nhập mật khẩu mới của bạn',
+            });
+            return false;
+        } else {
+            this.setState({
+                newPasswordError: null,
+            });
+            return true
+        }
+    }
+    validateRenewPassword = (value) => {
+        if (value === void 0) {
+            value = this.state.reNewPassword
+        }
+        if (value === '') {
+            this.setState({
+                reNewPasswordError: 'Nhập lại mật khẩu mới của bạn',
             });
             return false;
         } else if (value !== this.state.repassword) {
             this.setState({
-                repasswordError: 'Mật khẩu của bạn không khớp'
+                reNewPasswordError: 'Mật khẩu mới của bạn không khớp'
             })
         } else {
             this.setState({
-                repasswordError: null,
+                reNewPasswordError: null,
             });
             return true
         }
     }
 
     validateInput = (name, value) => {
-        if (name === 'email') {
-            return this.validateEmail(value)
-        }
-        else if (name === 'password') {
+        if (name === 'password') {
             return this.validatePassword(value)
         }
-        else if (name === 'repassword') {
-            return this.validateRepassword(value)
+        else if (name === 'newPassword') {
+            return this.validateNewPassword(value)
+        }
+        else if (name === 'reNewPassword') {
+            return this.validateReNewPassword(value)
         }
         else {
-            const emailFlag = this.validateEmail()
             const passwordFlag = this.validatePassword()
-            const repasswordFlag = this.validateRepassword()
-            return emailFlag && passwordFlag && repasswordFlag
+            const newPasswordFlag = this.validateNewPassword()
+            const reNewPasswordFlag = this.validateReNewPassword()
+            return passwordFlag && newPasswordFlag && reNewPasswordFlag
         }
     }
     handleSubmit = async () => {
@@ -117,45 +112,44 @@ export default class Signin extends PureComponent {
         })
     }
     render() {
-        const { redirect, emailError, passwordError, repasswordError, isSubmitting } = this.state
+        const { redirect, passwordError, newPasswordError, reNewPasswordError, isSubmitting } = this.state
         return (
             <Background>
                 {redirect ? <Redirect push to={redirect} /> : null}
                 <Helmet>
-                    <title>Đăng kí</title>
+                    <title>Đổi mật khẩu</title>
                 </Helmet>
                 <div className='main-content'>
                     <Link to={routeConstants.ROUTE_ROOT}>
                         <div className='big-logo' />
                     </Link>
                     <div className='account-form'>
-                        <span className='align-left title'>Đăng kí</span>
+                        <span className='align-left title'>Đổi mật khẩu</span>
                         <Field
-                            name='email'
-                            type={FieldType.TEXT}
-                            label='Email'
-                            id='email'
-                            onChange={this.handleChange}
-                            errorMessage={emailError}
-                        />
-                        <Field
-                            type={FieldType.PASSWORD}
-                            label='Mật khẩu'
-                            id='password'
                             name='password'
+                            type={FieldType.PASSWORD}
+                            label='Mật khẩu hiện tại'
+                            id='password'
                             onChange={this.handleChange}
                             errorMessage={passwordError}
                         />
                         <Field
                             type={FieldType.PASSWORD}
-                            label='Nhập lại mật khẩu'
-                            id='repassword'
-                            name='repassword'
+                            label='Mật khẩu mới'
+                            id='newPassword'
+                            name='newPassword'
                             onChange={this.handleChange}
-                            errorMessage={repasswordError}
+                            errorMessage={newPasswordError}
                         />
-                        <Button loading={isSubmitting} onClick={this.handleSubmit} disabled={emailError || passwordError || repasswordError}>Đăng kí</Button>
-                        <span>Bạn đã có tài khoản? <Link className='text-link' to={routeConstants.ROUTE_SIGNIN}>Đăng nhập ngay.</Link></span>
+                        <Field
+                            type={FieldType.PASSWORD}
+                            label='Nhập lại mật khẩu mới'
+                            id='reNewPassword'
+                            name='reNewPassword'
+                            onChange={this.handleChange}
+                            errorMessage={reNewPasswordError}
+                        />
+                        <Button loading={isSubmitting} onClick={this.handleSubmit} disabled={passwordError || newPasswordError || reNewPasswordError}>Đổi mật khẩu</Button>
                     </div>
                 </div>
             </Background >

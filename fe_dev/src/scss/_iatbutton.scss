@@ -64,3 +64,20 @@
 .book-icon {
     background: url(../assets/icons/ic_book.svg);
 }
+.person-icon {
+    background: url(../assets/icons/ic_person.svg);
+}
+.category-icon {
+    background: url(../assets/icons/ic_category.svg);
+}
+.active {
+    .book-icon {
+        background: url(../assets/icons/ic_book_active.svg);
+    }
+    .person-icon {
+        background: url(../assets/icons/ic_person_active.svg);
+    }
+    .category-icon {
+        background: url(../assets/icons/ic_category_active.svg);
+    }
+}

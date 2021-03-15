@@ -1,5 +1,5 @@
-import { API_CONST } from './APIs';
-import fetch from 'cross-fetch';
+// import { API_CONST } from './APIs';
+// import fetch from 'cross-fetch';
 
 const cats = [
     {
@@ -59,25 +59,25 @@ const cats = [
 ]
 const getCategories = async () => {
     return cats
-    let response;
-    let options = {
-        method: 'GET',
-    }
-    let url = API_CONST.GET_CATEGORRIES;
-    //tokenUtil.updateOrCreateHeader(options);
-    try {
-        response = await fetch(url, options);
-        let body = await response.json();
-        //tokenUtil.checkResponseErrorCode(body, options.method);
-        return [body.error_code === 0, body];
-    }
-    catch (e) {
-        if (response && response.statusText) {
-            return [false, response.statusText];
-        } else {
-            return [false, e.message];
-        }
-    }
+    // let response;
+    // let options = {
+    //     method: 'GET',
+    // }
+    // let url = API_CONST.GET_CATEGORRIES;
+    // //tokenUtil.updateOrCreateHeader(options);
+    // try {
+    //     response = await fetch(url, options);
+    //     let body = await response.json();
+    //     //tokenUtil.checkResponseErrorCode(body, options.method);
+    //     return [body.error_code === 0, body];
+    // }
+    // catch (e) {
+    //     if (response && response.statusText) {
+    //         return [false, response.statusText];
+    //     } else {
+    //         return [false, e.message];
+    //     }
+    // }
 }
 
 const bookDetails = {
@@ -154,12 +154,7 @@ const relaPros = [
 const getRelatedProducts = bookId => {
     return relaPros
 }
-const des = 'Để hoàn thành nhiệm vụ gìn giữ hòa bình cho hai nước Ostania và Westalis, gia đình Forger đã vượt qua kì thi tuyển đầy thử thách của học viện danh tiếng. Nhưng sau đó Anya phải trở thành học sinh ưu tú của trường để tiếp cận Desmond. Kế hoạch tác chiến “xây dựng tình bạn” của Twilight sẽ được thực hiện thế nào đây…!?<br />\
-<br />\
-TATSUYA ENDO<br />\
-<br />\
-Có một thuyết cho rằng gián điệp là nghề nghiệp cổ xưa thứ 2 trên thế giới. Lừa lọc, đánh bẫy, đó chính là lịch sử dối trá của nhân loại.<br />\
-Ngay cả tôi, ngày nào cũng đưa cho biên tập viên thông tin sai lệch rằng: “Trong hôm nay tôi sẽ nộp bản thảo!” đấy.<br /><p>Giá sản phẩm trên Tiki đã bao gồm thuế theo luật hiện hành. Tuy nhiên tuỳ vào từng loại sản phẩm hoặc phương thức, địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như phí vận chuyển, phụ phí hàng cồng kềnh, ...</p>'
+const des = 'Để hoàn thành nhiệm vụ gìn giữ hòa bình cho hai nước Ostania và Westalis, gia đình Forger đã vượt qua kì thi tuyển đầy thử thách của học viện danh tiếng. Nhưng sau đó Anya phải trở thành học sinh ưu tú của trường để tiếp cận Desmond. Kế hoạch tác chiến “xây dựng tình bạn” của Twilight sẽ được thực hiện thế nào đây…!?<br /><br />TATSUYA ENDO<br /><br />Có một thuyết cho rằng gián điệp là nghề nghiệp cổ xưa thứ 2 trên thế giới. Lừa lọc, đánh bẫy, đó chính là lịch sử dối trá của nhân loại.<br />Ngay cả tôi, ngày nào cũng đưa cho biên tập viên thông tin sai lệch rằng: “Trong hôm nay tôi sẽ nộp bản thảo!” đấy.<br /><p>Giá sản phẩm trên Tiki đã bao gồm thuế theo luật hiện hành. Tuy nhiên tuỳ vào từng loại sản phẩm hoặc phương thức, địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như phí vận chuyển, phụ phí hàng cồng kềnh, ...</p>'
 const getBookDescription = bookId => {
     return des
 }

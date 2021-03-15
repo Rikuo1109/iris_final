@@ -16,12 +16,12 @@ export default class ImagesViewer extends PureComponent {
         return (
             <div className='info-image'>
                 <div className='main-image-wrapper'>
-                    <img className='main-image' src={typeof this.props.images[this.state.index] === 'string' ? this.props.images[this.state.index].replace('cache/w80', 'cache/w424') : ''} />
+                    <img className='main-image' src={typeof this.props.images[this.state.index] === 'string' ? this.props.images[this.state.index].replace('cache/w80', 'cache/w424') : ''} alt='Hình ảnh sản phẩm' />
                 </div>
                 <div className='list-image'>
                     {this.props.images && this.props.images.map && this.props.images.map((item, index) =>
                         <div key={index} className={`small-image-wrapper ${this.state.index === index ? 'actived' : ''}`} onClick={() => this.handleClick(index)}>
-                            <img className='small-image' src={item} />
+                            <img className='small-image' src={item} alt='Hình ảnh sản phẩm' />
                         </div>)}
                 </div>
             </div>
