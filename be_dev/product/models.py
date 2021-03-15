@@ -28,7 +28,7 @@ class Author(BaseModel):
 
 class Book(BaseModel):
     
-    name = models.CharField(default='Name of book', max_length=100, unique=True)
+    name = models.CharField(default='Name of book', max_length=100, unique=False)
 
     price = models.IntegerField(default=0, validators=[validate_positive_number])
     first_price = models.IntegerField(default=0, validators=[validate_positive_number])

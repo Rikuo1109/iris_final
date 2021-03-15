@@ -10,12 +10,13 @@ class ProductViewSet(viewset.BaseView):
     permission_classes = [permissions.AllowAny, ]
     serializer_classes = {
         'item_list': serializers.ItemListSerializer,
+        'item_create': serializers.ItemCreateSerializer,
     }
 
     @decorators.action(methods=['GET', ], detail = False)
     def item_list(self, request):
         serializer = self.get_serializer(data=request.GET)
-        
+
         try:
             serializer.is_valid(raise_exception=True)
 
@@ -28,6 +29,24 @@ class ProductViewSet(viewset.BaseView):
 
         except exceptions.ValidationError as e:
             return self.get_response(data=e.detail, error_code=e.status_code)
+
+    @decorators.action(methods=['POST',], detail=False)
+    def item_create(self, request):
+        serializer = self.get_serializer(data=request.POST)
+        print(request.POST.get('authors'))
+        try:
+            serializer.is_valid(raise_exception=True)
+            # print(serializer)
+            new_book = product_services.add_new_item(**serializer.validated_data)
+
+            return self.get_response(
+                data=new_book,
+                error_code=http_code.HttpSuccess
+            )
+
+        except exceptions.ValidationError as e:
+            return self.get_response(data=e.detail, error_code=e.status_code)
+    
 
 class PopularProduct(generics.ListAPIView):
     from rest_framework import pagination

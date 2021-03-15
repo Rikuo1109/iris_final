@@ -26,3 +26,12 @@ def get_item_list(keyword = None, page_number = PAGE_NUMBER, page_size = PAGE_SI
 
     return list(pagination_data)
     
+def add_new_item(name, price, first_price, short_description, description, number_pages, issuing_company, publisher, categories, authors):
+    categories_list = [category for category in models.Category.objects.all() if category.uid in categories]
+    authors_list = [author for author in models.Author.objects.all() if author.uid in authors]
+    book = models.Book(name=name, price=price, first_price=first_price, short_description=short_description,\
+        description=description, number_pages=number_pages, issuing_company=issuing_company, publisher=publisher)
+    book.save()
+    [book.categories.add(category) for category in categories_list]
+    [book.authors.add(author) for author in authors_list]
+    return None

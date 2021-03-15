@@ -27,6 +27,22 @@ class ItemListSerializer(serializers.Serializer):
     def validate_option(self, value):
         return value
 
+class ItemCreateSerializer(serializers.Serializer):
+    name = serializers.CharField(required=True)
+    price = serializers.IntegerField(required=True)
+    first_price = serializers.IntegerField(required=True)
+    short_description = serializers.CharField(required=True)
+    description = serializers.CharField(required=True)
+    number_pages = serializers.IntegerField(required=True)
+    issuing_company = serializers.CharField(required=True)
+    publisher = serializers.CharField(required=True)
+    categories = serializers.ListField(
+        child = serializers.CharField()
+    )
+    authors = serializers.ListField(
+        child = serializers.CharField()
+    )
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
