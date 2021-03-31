@@ -12,6 +12,8 @@ INSTALLED_APPS += [
     'user',
 
     'product',
+
+    'interaction',
 ]
 
 AUTH_USER_MODEL     = 'user.User'

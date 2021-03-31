@@ -15,6 +15,8 @@ class Category(BaseModel):
 
     parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True)
 
+    fake_id = models.IntegerField(default=-1)
+
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -47,6 +49,8 @@ class Book(BaseModel):
     categories = models.ManyToManyField(to=Category, related_name='Categories_of_book', )
 
     authors = models.ManyToManyField(to=Author, related_name='Authors_of_book')
+
+    sku = models.IntegerField(default=-1)
 
     @property
     def rating(self):

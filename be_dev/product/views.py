@@ -77,6 +77,43 @@ class PopularProduct(generics.ListAPIView):
                 'error_code':0
             })
 
+class RecommendProduct(generics.ListAPIView):
+    from rest_framework import pagination
+    queryset = models.Book.objects.all()
+    serializer_class = serializers.ItemSerializer
+    permission_classes = (permissions.AllowAny, )
+    filter_backends = [filters.SearchFilter, product_filters.PriceFilter, \
+                        product_filters.AuthorFilters,
+                         product_filters.CategoryFilter,
+                         product_filters.PublisherFilter,
+                         product_filters.RatingFilter,]
+    search_fields = ['name']
+    pagination_classes = pagination.PageNumberPagination
+    # filter_backends = ()
+
+    def list(self, request):
+        from user.models import User
+        from interaction.models import Interaction
+        user = User.objects.get(email=f'{request.GET.get('id', None)}@gmail.com')
+        user_interaction = Interaction.objects.get(user=user)
+
+        category = user_interaction.book.categories
+
+        from django.http import JsonResponse
+        try:
+            data = super().list(request).data
+            return JsonResponse({
+                'data': data, 
+                'error_code':0
+            })
+        except Exception as e:
+            print(f"Exception while filtering: {e}")
+        return JsonResponse({
+                'data': None,
+                'error_code':0
+            })
+
+
 class CategoryTree(generics.ListAPIView):
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
