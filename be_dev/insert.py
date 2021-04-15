@@ -1,71 +1,136 @@
 import pandas as pd
+from datetime import datetime
+from math import isnan
 
-rate = pd.read_csv('/home/ngcuong/Documents/Thesis/filtered_rate.csv')
-n = rate[rate.groupby('customer_id').rating.transform(len) >= 12]
 
-from interaction.models import Interaction
-from user.models import User
-from product.models import Book
+def convertTimestamp(x): return datetime.fromtimestamp(
+    x).strftime("%Y-%m-%d %H:%M:%S")
 
-for row in n.itertuples():
-    try:
-        Interaction.objects.create(
-            user=User.objects.get(email=f'{str(row.customer_id)}@gmail.com'),
-            book=Book.objects.get(sku=row.product_id),
-            rating=row.rating,
-            timestampe=row.timeline_review_created_date,
-            content=row.content,
-            header=row.title,
-        )
-    except Exception as e:
-        print(e)
 
-from user.models import User
+def prepare_book():
+    data = pd.read_csv('''D:/Dataset/Thesis/Tiki's Rating/bookInfo_full.csv''')
+    f = open("insertBook.sql", "w", encoding="utf-8")
+    for row in data.itertuples():
+        f.write('''INSERT INTO product_book ('uid', 'status', 'created_at', 'updated_at', 'name', 'price', 'first_price', 'short_description', 'description', "number_pages", "issuing_company", "publisher", "rating_count", "rating_sum", "sku")\nVALUES\n''')
+        text = f'''    ('{row.uuid}', 'W', '2021-04-03 03:59:48.344033', '2021-04-03 03:59:48.344033', '{row.name}', {row.price}, {row.first_price}, '{row.short_description}', '{row.description}', {row.num_pages}, '{row.issuing_company}', '{row.publisher_name}', 0, 0, {row.id});\n'''
+        try:
+            f.write(text)
+        except Exception as e:
+            print(e)
+    f.close()
 
-for id in ids:
-    User.objects.create(
-        is_superuser=False,
-        email=f'{str(id)}@gmail.com'
-    )
 
-#insert Categroy
+# prepare_book()
 
-import pandas as pd
+def prepare_author():
+    data = pd.read_csv('''D:/Dataset/Thesis/Tiki's Rating/author_full.csv''')
+    f = open("insertAuthor.sql", "w", encoding="utf-8")
+    f.write('''INSERT INTO product_author ("uid", "status", "created_at", "updated_at", "name")\nVALUES\n''')
+    for row in data.itertuples():
+        text = f'''    ('{row.uuid}', 'W', '2021-04-04 02:11:34.403386', '2021-04-04 02:11:34.403386', '{row.name}'),\n'''
+        try:
+            f.write(text)
+        except Exception as e:
+            print(e)
+    f.close()
 
-category = pd.read_csv('/home/ngcuong/Documents/Thesis/bookCategory.csv')
 
-from product.models import Category
+# prepare_author()
 
-for row in category.itertuples():
-    if row.code == 316:
-        pass
-    else:
-        Category.objects.create(
-            name=row.text,
-            parent=Category.objects.get(fake_id=row.parent),
-            fake_id=row.code,
-        )
 
-#insert Book
-#17696
-import pandas as pd
+def prepare_book_categories():
+    from product.models import Book, Category
+    booklist = Book.objects.all()
+    book_dict = {}
+    for book in booklist:
+        book_dict[book.sku] = book.id
 
-book = pd.read_csv('/home/ngcuong/Documents/Thesis/bookInfo.csv')
+    catelist = Category.objects.all()
+    cate_dict = {}
+    for cate in catelist:
+        cate_dict[cate.code] = cate.id
+    data = pd.read_csv(
+        '''D:/Dataset/Thesis/Tiki's Rating/book_category_full.csv''')
+    f = open("insertBookCategory.sql", "w", encoding="utf-8")
+    f.write(
+        '''INSERT INTO product_book_categories ("book_id", "category_id")\nVALUES\n''')
+    for row in data.itertuples():
+        try:
+            text = f'''    ({book_dict[row.sku]}, {cate_dict[row.category]}),\n'''
+            f.write(text)
+        except Exception as e:
+            print(e)
+    f.close()
 
-from product.models import Book, Category, Author
 
-for row in book.itertuples():
-    try:
-        book = Book.objects.get(
-            sku=row.id,
-        )
-        book.categories.set(
-            Category.objects.filter(fake_id__in=list(map(int,row.category.split(','))))
-        )
+def prepare_book_author():
+    from product.models import Book, Author
+    booklist = Book.objects.all()
+    book_dict = {}
+    for book in booklist:
+        book_dict[book.sku] = book.id
 
-        book.authors.set(
-            Author.objects.get_or_create(name__in=row.author_name.split('!'))
-        )
-        book.save()
-    except Exception as e:
-        print(e)
+    authorlist = Author.objects.all()
+    author_dict = {}
+    for author in authorlist:
+        author_dict[author.uid.hex] = author.id
+    data = pd.read_csv(
+        '''D:/Dataset/Thesis/Tiki's Rating/book_author_full.csv''')
+    f = open("insertBookAuthor.sql", "w", encoding="utf-8")
+    f.write(
+        '''INSERT INTO product_book_authors ("book_id", "author_id")\nVALUES\n''')
+    for row in data.itertuples():
+        try:
+            text = f'''    ({book_dict[row.sku]}, {author_dict[row.uuid]}),\n'''
+            f.write(text)
+        except Exception as e:
+            print(e)
+    f.close()
+
+
+# prepare_book_author()
+def prepare_rate():
+    from product.models import Book
+    booklist = Book.objects.all()
+    book_dict = {}
+    for book in booklist:
+        book_dict[book.sku] = book.id
+    from user.models import User
+    userlist = User.objects.all()
+    user_dict = {}
+    for user in userlist:
+        user_dict[int(user.email.split('@')[0])] = user.id
+    data = pd.read_csv(
+        '''D:/Dataset/Thesis/Tiki's Rating/rate_full.csv''')
+    f = open("insertRate.sql", "w", encoding="utf-8")
+    f.write('''INSERT INTO interaction_interaction ("uid", "status", "created_at", "updated_at", "rating", "content", "header", "book_id", "user_id")\nVALUES\n''')
+    for row in data.itertuples():
+        try:
+            text = f'''    ('{row.uuid}', 'W', '{convertTimestamp(row.timestamp)}', '{convertTimestamp(row.timestamp)}', {row.rating}, '{row.content}', '{row.title}', '{book_dict[row.product_id]}', '{user_dict[row.customer_id]}'),\n'''
+            f.write(text)
+        except Exception as e:
+            print(e)
+    f.close()
+
+
+# prepare_rate()
+def prepare_images():
+    from product.models import Book
+    booklist = Book.objects.all()
+    book_dict = {}
+    for book in booklist:
+        book_dict[book.sku] = book.id
+    data = pd.read_csv(
+        '''D:/Dataset/Thesis/Tiki's Rating/images_x1.csv''')
+    f = open("insertImages.sql", "w", encoding="utf-8")
+    f.write('''INSERT INTO product_image ("uid", "status", "created_at", "updated_at", "url", "description", "book_id")\nVALUES\n''')
+    for row in data.itertuples():
+        try:
+            text = f'''    ('{row.uuid}', 'W', '2021-04-04 02:11:34.403386', '2021-04-04 02:11:34.403386', '{row.images}', '', {book_dict[row.id]}),\n'''
+            f.write(text)
+        except Exception as e:
+            print(e)
+    f.close()
+
+
+prepare_images()

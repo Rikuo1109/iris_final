@@ -47,7 +47,8 @@ class ItemCreateSerializer(serializers.Serializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('uid', 'name', 'parent')
+        # fields = ('uid', 'name', 'parent')
+        fields = ('name',)
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,7 +57,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(read_only=True, many=True)
-    authors = AuthorSerializer(read_only=True, many=True)
+    # authors = AuthorSerializer(read_only=True, many=True)
     class Meta:
         model = Book
-        fields = '__all__'
+        fields = ('name', 'categories')

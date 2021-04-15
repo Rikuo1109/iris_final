@@ -9,7 +9,7 @@ class Interaction(BaseModel):
     user = models.ForeignKey(to=User,on_delete=models.CASCADE)
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     rating = models.IntegerField()
-    timestampe = models.IntegerField()
+    # timestampe = models.IntegerField()
     content = models.CharField(max_length=200)
     header = models.CharField(max_length=50)
     

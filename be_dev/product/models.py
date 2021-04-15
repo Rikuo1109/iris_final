@@ -15,7 +15,7 @@ class Category(BaseModel):
 
     parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True)
 
-    fake_id = models.IntegerField(default=-1)
+    code = models.IntegerField(default=-1)
 
     name = models.CharField(max_length=100)
 
