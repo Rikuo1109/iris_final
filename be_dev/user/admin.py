@@ -21,7 +21,7 @@ class BaseUserAdmin(admin.ModelAdmin):
     list_filter = ('is_admin', 'is_superuser')
 
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'is_admin', 'is_superuser', 'status')}),
+        (None, {'fields': ('email', 'password', 'is_admin', 'is_superuser', 'status', 'name')}),
     )
 
     def save_model(self, request, obj, form, change):

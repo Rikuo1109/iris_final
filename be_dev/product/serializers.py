@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Book, Category, Author
+from .models import Book, Category, Author, Image
 
 PAGE_NUMBER = 1
 PAGE_SIZE = 10
@@ -43,12 +43,27 @@ class ItemCreateSerializer(serializers.Serializer):
         child = serializers.CharField()
     )
 
-
-class CategorySerializer(serializers.ModelSerializer):
+class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        # fields = ('uid', 'name', 'parent')
-        fields = ('name',)
+        fields = ('name', 'code')
+class CategorySerializer(serializers.ModelSerializer):
+    parent = SubCategorySerializer()
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+# class CategorySerializer(serializers.ModelSerializer):
+#     parent_name = serializers.SerializerMethodField(read_only=True)
+#     class Meta:
+#         model = Category
+#         fields = ('uid', 'name', 'parent_name', 'code', 'parent')
+#         # fields = ('name',)
+
+#     def get_parent_name(self, instance):
+#         return instance.parent
+
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,7 +72,14 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(read_only=True, many=True)
-    # authors = AuthorSerializer(read_only=True, many=True)
+    authors = AuthorSerializer(read_only=True, many=True)
+    image = serializers.SerializerMethodField()
     class Meta:
         model = Book
-        fields = ('name', 'categories')
+        fields = '__all__'
+
+    def get_image(self, instance):
+        try: 
+            return Image.objects.get(book=instance).url
+        except:
+            return ''

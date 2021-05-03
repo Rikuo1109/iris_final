@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import permissions, decorators, exceptions, generics
 from utils import viewset, http_code
 from django_filters.rest_framework import DjangoFilterBackend
@@ -38,7 +37,6 @@ class ProductViewSet(viewset.BaseView):
         print(request.POST.get('authors'))
         try:
             serializer.is_valid(raise_exception=True)
-            # print(serializer)
             new_book = product_services.add_new_item(
                 **serializer.validated_data)
 
@@ -143,7 +141,7 @@ class CategoryTree(generics.ListAPIView):
 
     def list(self, request):
         from django.http import JsonResponse
-        data = super().list(request).data["results"]
+        data = super().list(request).data
         category_names = [d["name"] for d in data]
         category_tree = {}
         for idx, category_name in enumerate(category_names):
@@ -151,9 +149,10 @@ class CategoryTree(generics.ListAPIView):
                 "children": [], "uid": data[idx]["uid"]}
         for category in data:
             if category["parent"]:
-                category_tree[category_names[category["parent"] - 1]]["children"].append(
+                category_tree[category["parent"]["name"]]["children"].append(
                     {category["name"]: category_tree[category["name"]]})
         # print(category_tree)
+
         response_data = {"root": category_tree["root"]}
 
         return JsonResponse({

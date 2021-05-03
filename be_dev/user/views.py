@@ -18,12 +18,24 @@ class AuthViewSet(viewset.BaseView):
         'reset_password': user_serializers.ResetPasswordSerializer,
     }
 
+    @decorators.action(methods=['GET', ], detail=False)
+    def infor(self, request):
+        user = request.user
+        return self.get_response(
+            data = {
+                'name': user.name,
+                'is_admin': user.is_admin,
+                'uid': user.uid
+            }, 
+            error_code=http_code.HttpSuccess
+        )
+
     @decorators.action(methods=['POST', ], detail=False)
     def register(self, request):
         """
             A api to register a new user on the system
 
-            @param[request]: email & password
+            :param request: email & password
 
             @do:
                 -> Check valid email and password, If error, return response with status code 400 (error.status_code)
@@ -129,9 +141,3 @@ class AuthViewSet(viewset.BaseView):
                 data = e.detail,
                 error_code=e.status_code
             )
-
-
-
-
-
-
