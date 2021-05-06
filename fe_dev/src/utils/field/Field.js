@@ -335,8 +335,7 @@ class Field extends PureComponent {
                     name={name ? name : ''}
                     id={id ? id : ''}
                     value={value}
-                    className={`field-common ${className ? className : ''} ${viewOnly ? 'view-only-input' : ''}`
-                    }
+                    className={`field-common ${className ? className : ''} ${viewOnly ? 'view-only-input' : ''}`}
                     onChange={this.handleChange}
                     onBlur={this.handleBlur}
                     disabled={isDisabled}

@@ -5,12 +5,12 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 import ScrollToTop from './utils/ScrollToTop';
 import { routeConstants } from './utils/constants/RouteConstant';
 import ProfileContext from './context/ProfileContext';
+import { ProfileServices } from './services/ProfileServices';
 
-const DefaultLayout = Loadable({
-    loader: () => import('./container/DefaultLayout'),
+const HomePage = Loadable({
+    loader: () => import('./views/homepage/HomePage'),
     loading: LoadingPage,
 })
-
 const Login = Loadable({
     loader: () => import('./views/login/Login'),
     loading: LoadingPage,
@@ -40,18 +40,49 @@ const BookDetails = Loadable({
     loading: LoadingPage,
 })
 
+const Account = Loadable({
+    loader: () => import('./views/Account/Account'),
+    loading: LoadingPage,
+})
+
 const Admin = Loadable({
     loader: () => import('./views/Admin/Admin'),
     loading: LoadingPage,
 })
 class App extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            isAdmin: false,
+            uid: 0,
+        }
+    }
+    componentDidMount() {
+        this.getUserData()
+    }
+
+    getUserData = async () => {
+        let [success, body] = await ProfileServices.getUserData()
+        if (success) {
+            this.setState({
+                name: (body.data && body.data.name) || '',
+                isAdmin: (body.data && body.data.is_admin) || false,
+                uid: (body.data && body.data.uid) || 0,
+            })
+        }
+    }
     render() {
+        console.log(this.state)
         return (
             <HashRouter>
                 <ScrollToTop>
                     <ProfileContext.Provider
                         value={{
-                            uid: 'hihi'
+                            name: this.state.name,
+                            isAdmin: this.state.isAdmin,
+                            uid: this.state.uid,
+                            reloadUserData: this.getUserData,
                         }}
                     >
                         <Switch>
@@ -61,8 +92,9 @@ class App extends PureComponent {
                             <Route path={routeConstants.ROUTE_CHANGEPASSWORD} exact name='Change Password' component={ChangePassWord} />
                             <Route path={routeConstants.ROUTE_BOOK_DETAIL} exact name='Book Detail' component={BookDetails} />
                             <Route path={routeConstants.ROUTE_BOOK_CATEGORY} exact name='Book Category' component={BookCategory} />
+                            <Route path={routeConstants.ROUTE_ACCOUNT} exact name='Account' component={Account} />
                             <Route path={routeConstants.ROUTE_ADMIN} exact name='Admin' component={Admin} />
-                            <Route path={routeConstants.ROUTE_ROOT} default name='Home' component={DefaultLayout} />
+                            <Route path={routeConstants.ROUTE_ROOT} default name='Home' component={HomePage} />
                         </Switch>
                     </ProfileContext.Provider>
                 </ScrollToTop>

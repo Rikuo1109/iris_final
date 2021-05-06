@@ -1,12 +1,14 @@
 .default-index-item {
+    width: 240px;
     padding: 6px 12px;
     border-radius: 12px;
     min-height: 36px;
+    cursor: pointer;
     div {
         text-decoration: none;
         color: black;
     }
-    a {
+    >a, >div {
         display: flex;
         justify-content: space-between;
         border-radius: 6px;
@@ -16,4 +18,8 @@
 .default-index-item:hover,
 .default-index-item.focus {
     background: rgba($color: lightblue, $alpha: 0.5)
+}
+
+.account-menu {
+    width: 200px;
 }

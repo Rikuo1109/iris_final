@@ -8,9 +8,11 @@ const SHORT_BOOK_DETAIL = '/chi-tiet'
 const ROUTE_BOOK_DETAIL = '/chi-tiet/:bookID'
 
 const SHORT_BOOK_CATEGORY = '/the-loai'
-const ROUTE_BOOK_CATEGORY = '/the-loai/:categoryPath'
+const ROUTE_BOOK_CATEGORY = '/the-loai/:categoryID'
 
+const ROUTE_ACCOUNT = '/account'
 const ROUTE_ADMIN = '/quan-ly'
+
 export const routeConstants = {
     ROUTE_ROOT,
     ROUTE_LOGIN,
@@ -21,5 +23,6 @@ export const routeConstants = {
     ROUTE_BOOK_DETAIL,
     SHORT_BOOK_CATEGORY,
     ROUTE_BOOK_CATEGORY,
+    ROUTE_ACCOUNT,
     ROUTE_ADMIN,
 }

@@ -35,21 +35,3 @@
 .revert-flex {
     flex-direction: row-reverse;
 }
-
-.index-table{
-    width: 800px;
-    transition: all 0.2s !important;
-    padding: 12px;
-    .modal-content {
-        align-items: flex-start;
-        flex-direction: row;
-        padding: 12px;
-    }
-    .left-table {
-        width: 400px;
-    }
-    .right-table {
-        width: 400px;
-        min-height: 20px;
-    }
-}

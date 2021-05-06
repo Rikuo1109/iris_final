@@ -7,6 +7,7 @@ import { routeConstants } from '../../utils/constants/RouteConstant'
 import Field from '../../utils/field/Field'
 import { Helmet } from 'react-helmet';
 import { ProfileServices } from '../../services/ProfileServices'
+import ProfileContext from '../../context/ProfileContext'
 
 export default class Login extends PureComponent {
     constructor(props) {
@@ -72,21 +73,22 @@ export default class Login extends PureComponent {
             return emailFlag && passwordFlag
         }
     }
-    handleSubmit = async () => {
+    handleSubmit = async (reloadUserData) => {
         this.setState({
             isSubmitting: true
         })
         let data = new FormData()
         data.append('email', this.state.email)
         data.append('password', this.state.password)
-        let success, body = await ProfileServices.login(data)
+        let [success, body] = await ProfileServices.login(data)
         console.log(body)
         this.setState({
             isSubmitting: false,
         })
         if (success) {
-            localStorage.setItem('access', body.data && body.data.access)
-            localStorage.setItem('refesh', body.data && body.data.refesh)
+            localStorage.setItem('access', body.data && body.data.token && body.data.token.access)
+            localStorage.setItem('refresh', body.data && body.data.token && body.data.token.refresh)
+            reloadUserData()
             this.setState({
                 redirect: routeConstants.ROUTE_ROOT,
             })
@@ -129,7 +131,11 @@ export default class Login extends PureComponent {
                             errorMessage={passwordError}
                         />
                         <Link className='align-left text-link' to=''>Quên mật khẩu?</Link>
-                        <Button loading={isSubmitting} onClick={this.handleSubmit} disabled={emailError || passwordError}>Đăng nhập</Button>
+                        <ProfileContext.Consumer>
+                            {
+                                profile => <Button loading={isSubmitting} onClick={() => this.handleSubmit(profile.reloadUserData)} disabled={emailError || passwordError}>Đăng nhập</Button>
+                            }
+                        </ProfileContext.Consumer>
                         <span>Bạn chưa có tài khoản? <Link className='text-link' to={routeConstants.ROUTE_SIGNIN}>Đăng kí ngay.</Link></span>
                     </div>
                 </div>

@@ -1,18 +1,14 @@
 import React, { PureComponent } from 'react'
-import { Helmet } from 'react-helmet';
-import ProfileContext from '../../context/ProfileContext';
-import PageFooter from '../../utils/PageFooter';
-import PageHeader from '../../utils/PageHeader';
-import ProductsPage from '../../utils/ProductsPage';
+import { Helmet } from 'react-helmet'
 import { ProductServices } from '../../services/ProductServices';
 import { commonFunction } from '../../utils/constants/commonFunction';
+import PageHeader from '../../utils/PageHeader';
 
-
-export default class HomePage extends PureComponent {
+export default class Account extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            category: [],
+            categories: [],
         }
     }
 
@@ -25,22 +21,17 @@ export default class HomePage extends PureComponent {
             })
         }
     }
+
     render() {
         return (
             <div id='main-page'>
                 <Helmet>
-                    <title>Trang chủ</title>
+                    <title>Quản lý tài khoản</title>
                 </Helmet>
                 <PageHeader categories={this.state.categories} />
-                <ProfileContext.Consumer>
-                    {
-                        profile => <ProductsPage
-                            navData={this.state.categories}
-                            userId={profile.uid}
-                        />
-                    }
-                </ProfileContext.Consumer>
-                <PageFooter />
+                <div className='account-page'>
+
+                </div>
             </div>
         )
     }

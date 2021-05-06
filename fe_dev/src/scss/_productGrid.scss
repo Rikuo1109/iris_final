@@ -14,17 +14,25 @@
         width: 232px;
     }
     img{
-        max-width: 84%;
-        margin-left: 8%;
+        max-width: 100%;
+        align-self: center;
+        max-height: 200px;
     }
 }
 .product-item {
     padding: 12px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
     >*{
         margin-bottom: 12px;
     }
     >*:last-child{
         margin-bottom: 0px;
+    }
+    .price-wrapper {
+        display: flex;
+        justify-content: space-between;
     }
 }
 .product-item:hover{

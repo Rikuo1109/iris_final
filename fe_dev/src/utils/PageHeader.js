@@ -3,7 +3,9 @@ import Search from './Search';
 import IconAndTextButton from './IconAndTextButton';
 import { routeConstants } from './constants/RouteConstant'
 import IndexItem from './IndexItem';
-import { Modal } from 'reactstrap';
+import ProfileContext from '../context/ProfileContext';
+import HoverWrapper from './HoverWrapper';
+import { ProfileServices } from '../services/ProfileServices';
 
 class PageHeader extends PureComponent {
     constructor(props) {
@@ -42,6 +44,13 @@ class PageHeader extends PureComponent {
             children: data
         })
     }
+    handleLogout = async (reloadUserData) => {
+        await ProfileServices.logout()
+        localStorage['access'] = ''
+        localStorage['refresh'] = ''
+        reloadUserData()
+
+    }
     render() {
         return (
             <div className='main-header'>
@@ -56,61 +65,110 @@ class PageHeader extends PureComponent {
                                 href: routeConstants.ROUTE_ROOT,
                             }]}
                         />
-                        <IconAndTextButton
-                            className='pointer'
-                            icons={[
-                                { icon: 'arrow-down-icon icon24' },
-                            ]}
-                            texts={[{
-                                text: 'DANH MỤC SÁCH',
-                            }]}
-                            revert={true}
-                            click={this.showIndex}
+                        <HoverWrapper
+                            rootComponent={<IconAndTextButton
+                                className='pointer'
+                                icons={[
+                                    { icon: 'arrow-down-icon icon24' },
+                                ]}
+                                texts={[{
+                                    text: 'DANH MỤC SÁCH',
+                                }]}
+                                revert={true}
+                                click={this.showIndex}
+                            />}
+                            childComponent={
+                                <div className='hover-table'>
+                                    {this.props.categories && this.props.categories.map && this.props.categories.map(item =>
+                                        <HoverWrapper
+                                            position='left'
+                                            rootComponent={<IndexItem
+                                                key={item.uid}
+                                                label={item.label}
+                                                children={item.children || null}
+                                                url={'/the-loai/' + item.uid}
+                                                onMouseOver={() => this.showChildren(item.children)}
+                                                className={(item.children && this.state.children === item.children) ? 'focus' : ''}
+                                            />}
+                                            childComponent={
+                                                item.children && item.children.length && item.children.map && <div className='hover-table'>
+                                                    {item.children.map(child =>
+                                                        <IndexItem
+                                                            key={child.uid}
+                                                            label={child.label}
+                                                            children={child.children || null}
+                                                            url={'/the-loai/' + child.uid}
+                                                        />
+                                                    )}
+                                                </div>}
+                                        >
+                                        </HoverWrapper>
+                                    )}
+                                </div>
+                            }
                         />
+
                         <Search
                             placeHolder='Bạn cần tìm gì ...'
                         />
+                        <a href="tel:+84919852893">Call</a>
                     </div>
                     <div className='flex-align-right'>
-                        <IconAndTextButton
-                            className='custom-text-seperator'
-                            icons={[
-                                { icon: 'account-icon icon24' },
-                            ]}
-                            texts={[{
-                                text: 'Đăng nhập',
-                                href: routeConstants.ROUTE_LOGIN,
-                            },
+                        <ProfileContext.Consumer>
                             {
-                                text: 'Đăng kí',
-                                href: routeConstants.ROUTE_SIGNIN,
-                            }]}
-                            textSeperator='/'
-                        />
+                                profile => profile.uid === 0 ?
+                                    <IconAndTextButton
+                                        className='custom-text-seperator'
+                                        icons={[
+                                            { icon: 'account-icon icon24' },
+                                        ]}
+                                        texts={[{
+                                            text: 'Đăng nhập',
+                                            href: routeConstants.ROUTE_LOGIN,
+                                        },
+                                        {
+                                            text: 'Đăng kí',
+                                            href: routeConstants.ROUTE_SIGNIN,
+                                        }]}
+                                        textSeperator='/'
+                                    /> :
+                                    <HoverWrapper
+                                        position='align-right'
+                                        rootComponent={<IconAndTextButton
+                                            icons={[
+                                                { icon: 'account-icon icon24' },
+                                            ]}
+                                            texts={[{
+                                                text: profile.name,
+                                            }]}
+                                        />}
+                                        childComponent={
+                                            <div className='hover-table'>
+                                                <IndexItem
+                                                    key='1'
+                                                    label='Quản lý tài khoản'
+                                                    className='account-menu'
+                                                    url={routeConstants.ROUTE_ACCOUNT}
+                                                />
+                                                {profile.isAdmin ? <IndexItem
+                                                    key='2'
+                                                    label='Quản lý hệ thống'
+                                                    className='account-menu'
+                                                    url={routeConstants.ROUTE_ADMIN}
+                                                /> : null}
+                                                <IndexItem
+                                                    key='3'
+                                                    label='Đăng xuất'
+                                                    className='account-menu'
+                                                    onClick={() => this.handleLogout(profile.reloadUserData)}
+                                                />
+                                            </div>
+                                        }
+                                    />
+                            }
+                        </ProfileContext.Consumer>
                     </div>
                 </div>
-                <Modal isOpen={this.state.indexIsShowed} toggle={this.toggle} className={'index-table'} scrollable={true}>
-                    <div className='left-table'>
-                        {this.props.categories && this.props.categories.map && this.props.categories.map(item =>
-                            <IndexItem
-                                key={item.url}
-                                label={item.label}
-                                children={item.children || null}
-                                url={'/the-loai' + item.url}
-                                set={() => this.showChildren(item.children)}
-                                className={(item.children && this.state.children === item.children) ? 'focus' : ''}
-                            />)}
-                    </div>
-                    <div className='right-table'>
-                        {this.state.children && this.state.children.map && this.state.children.map(item =>
-                            <IndexItem
-                                key={item.url}
-                                label={item.label}
-                                children={item.children || null}
-                                url={'/the-loai' + item.url}
-                            />)}
-                    </div>
-                </Modal>
             </div >
         );
     }

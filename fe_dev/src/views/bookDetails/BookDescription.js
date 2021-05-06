@@ -27,7 +27,7 @@ export default class BookDescription extends PureComponent {
         return (
             <div className='common-content-wrapper'>
                 <div className='title'>MÔ TẢ</div>
-                <div className={`description ${this.state.isCollapsed ? 'collapsed' : 'expand'}`} dangerouslySetInnerHTML={{ '__html': this.state.description }} />
+                <div className={`description ${this.state.isCollapsed ? 'collapsed' : 'expand'}`} dangerouslySetInnerHTML={{ '__html': this.props.description }} />
                 <IconAndTextButton
                     texts={[{
                         text: this.state.isCollapsed ? 'Xem thêm' : 'Thu gọn',

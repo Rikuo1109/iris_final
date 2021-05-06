@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Helmet } from 'react-helmet'
 import { ProductServices } from '../../services/ProductServices';
+import { commonFunction } from '../../utils/constants/commonFunction';
 import AdminNavType from '../../utils/constants/enums/AdminNavType';
 import PageHeader from '../../utils/PageHeader';
 import AdminNavigator from './AdminNavigator';
@@ -19,10 +20,13 @@ export default class Admin extends PureComponent {
     }
 
     async componentDidMount() {
-        const categories = await ProductServices.getCategories()
-        this.setState({
-            categories: categories,
-        })
+        let [success, body] = await ProductServices.getCategories()
+        if (success) {
+            const categories = body.data.root.children[0]['Sách Tiếng Việt'].children.map(item => commonFunction.reformatCategory(item))
+            this.setState({
+                categories: categories,
+            })
+        }
     }
 
     setActive = id => {
@@ -36,7 +40,7 @@ export default class Admin extends PureComponent {
                 <Helmet>
                     <title>Quản lý</title>
                 </Helmet>
-                <PageHeader categories={this.props.categories} />
+                <PageHeader categories={this.state.categories} />
                 <div className='admin-page'>
                     <AdminNavigator active={this.state.active} setActive={this.setActive} />
                     <div className='admin-table'>

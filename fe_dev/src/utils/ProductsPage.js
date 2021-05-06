@@ -23,20 +23,80 @@ export default class ProductsPage extends PureComponent {
             commonProducts: [],
         }
     }
-    componentDidMount() {
-        const recomendedProducts = ProductServices.getRecomendedProducts()
-        this.setState({
-            recomendedProducts: recomendedProducts,
-        })
-        const author = AuthorServices.getAuthors()
-        this.setState({
-            authorOptions: author.map(item => { return { label: item, value: item } }),
-        })
-        const publisher = PublisherServices.getPubliser()
-        this.setState({
-            publisherOptions: publisher.map(item => { return { label: item, value: item } }),
-        })
+    shouldPrepareData = (prevProps, prevState) => {
+        let key
+        for (key of ['userID', 'category']) {
+            if (prevProps[key] !== this.props[key]) return true
+        }
+        for (key of ['rate', 'minPrice', 'maxPrice', 'publisher', 'author']) {
+            if (prevState[key] !== this.state[key]) return true
+        }
+        return false
     }
+    prepareFilter = () => {
+        const { rate, minPrice, maxPrice, publisher, author } = this.state
+        const { userID, category } = this.props
+        const filter = {
+            userID: userID,
+            rate: rate,
+            min_price: minPrice.replace('.', ''),
+            max_price: maxPrice.replace('.', ''),
+            publisher: publisher,
+            author_id: author,
+            category_id: category || ''
+        }
+        let filter_string = ''
+        for (let key in filter) {
+            if (filter[key]) {
+                filter_string = filter_string + `&${key}=${filter[key]}`
+            }
+        }
+        return filter_string.length ? ('?' + filter_string.slice(1)) : ''
+    }
+    prepareData = async () => {
+        let [success, body] = await ProductServices.getCommonProducts(this.prepareFilter())
+        if (success) {
+            this.setState({
+                commonProducts: body.data.results,
+            })
+        }
+        [success, body] = await ProductServices.getRecomendedProducts()
+        if (success) {
+            this.setState({
+                recomendedProducts: body.data.recommended_books,
+            })
+        }
+    }
+    prepareAuthorOptions = async () => {
+        let [success, body] = await AuthorServices.getAuthors(this.props.category)
+        if (success) {
+            this.setState({
+                authorOptions: body.data && body.data.results && body.data.results.map(item => { return { label: item.name, value: item.uid } }),
+            })
+        }
+    }
+    preparePublisherOptions = async () => {
+        let [success, body] = await PublisherServices.getPubliser()
+        if (success) {
+            this.setState({
+                publisherOptions: body.data && body.data.results && body.data.results.map(item => { return { label: item.publisher, value: item.publisher } }),
+            })
+        }
+    }
+    componentDidMount() {
+        this.prepareData()
+        this.preparePublisherOptions()
+        this.prepareAuthorOptions()
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if (this.shouldPrepareData(prevProps, prevState)) {
+            this.prepareData()
+        }
+        if (this.props.category !== prevProps.category) {
+            this.prepareAuthorOptions()
+        }
+    }
+
 
     handleChange = ({ name, value }) => {
         console.log(name, value)
@@ -45,6 +105,7 @@ export default class ProductsPage extends PureComponent {
         })
     }
     render() {
+        console.log(this.prepareFilter())
         return (
             <div className='content-wrapper page-content product-page'>
                 <div className='left-content'>
@@ -57,7 +118,7 @@ export default class ProductsPage extends PureComponent {
                 <div className='right-content'>
                     {this.state.recomendedProducts.length ?
                         <ProductGrid
-                            title='SẢN PHẨM PHỔ BIẾN'
+                            title='SẢN PHẨM GỢI Ý'
                             numColumn={4}
                             datas={this.state.recomendedProducts}
                         /> : null

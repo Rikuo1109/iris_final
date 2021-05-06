@@ -4,6 +4,7 @@ import { ProductServices } from '../../services/ProductServices';
 import PageHeader from '../../utils/PageHeader';
 import PageFooter from '../../utils/PageFooter';
 import ProductsPage from '../../utils/ProductsPage';
+import { commonFunction } from '../../utils/constants/commonFunction';
 
 export default class bookList extends PureComponent {
     constructor(props) {
@@ -17,47 +18,52 @@ export default class bookList extends PureComponent {
     }
 
     async componentDidMount() {
-        const categories = await ProductServices.getCategories()
-        const category = this.getCategory(this.props.match.params.categoryPath, categories)
+        let [success, body] = await ProductServices.getCategories()
+        let categories = []
+        if (success) {
+            categories = body.data.root.children[0]['Sách Tiếng Việt'].children.map(item => commonFunction.reformatCategory(item))
+        }
+        const category = this.getCategory(this.props.match.params.categoryID, categories)
         this.setState({
             navData: category.children,
-            category: category.url,
+            category: category.uid,
             pageTitle: category.label,
-        })
-        this.setState({
             categories: categories,
         })
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const category = this.getCategory(this.props.match.params.categoryPath, this.state.categories)
-        this.setState({
-            navData: category.children,
-            category: category.url,
-            pageTitle: category.label,
-        })
+        if (this.props.match.params.categoryID !== prevProps.match.params.categoryID) {
+            const category = this.getCategory(this.props.match.params.categoryID, this.state.categories)
+            this.setState({
+                navData: category.children,
+                category: category.uid,
+                pageTitle: category.label,
+            })
+        }
     }
 
 
-    getCategory = (path, categories) => {
+    getCategory = (id, categories) => {
         if (categories.map) {
             let result = null
             categories.forEach(element => {
-                const tempResult = this.getCategory(path, element)
+                const tempResult = this.getCategory(id, element)
                 if (tempResult) result = tempResult
             });
             if (result) return result
         } else {
-            if (path === categories.url.slice(1)) {
+            if (id === categories.uid) {
                 return categories
             } else if (categories.children) {
-                return this.getCategory(path, categories.children)
+                return this.getCategory(id, categories.children)
             }
         }
         return false
     }
 
     render() {
+        console.log(this.state.category)
         return (
             <div id='main-page'>
                 <Helmet>
@@ -66,7 +72,7 @@ export default class bookList extends PureComponent {
                 <PageHeader categories={this.state.categories} toggle={this.state.category} />
                 <ProductsPage
                     navData={this.state.navData}
-                    category={this.state.category}
+                    category={this.props.match.params.categoryID}
                 />
                 <PageFooter />
             </div>

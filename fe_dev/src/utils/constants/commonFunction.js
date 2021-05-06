@@ -38,8 +38,18 @@ const getParamValue = (paramName, search) => {
     });
     return paramValue;
 }
-
+const reformatCategory = cat => {
+    const label = Object.keys(cat)[0]
+    const uid = cat[label].uid
+    const children = cat[label].children && cat[label].children.map(item => reformatCategory(item))
+    return {
+        uid: uid,
+        label: label,
+        children: children,
+    }
+}
 export const commonFunction = {
     convertTimestamp,
     getParamValue,
+    reformatCategory,
 }

@@ -5,7 +5,6 @@ import ProductItem from './ProductItem'
 
 export default class ProductGrid extends PureComponent {
     render() {
-        console.log(this.props.datas && this.props.datas.map)
         return (
             <div className='common-content-wrapper product-grid-wrapper'>
                 <div className='title'>{this.props.title}</div>
@@ -16,8 +15,8 @@ export default class ProductGrid extends PureComponent {
                                 image={item.image}
                                 name={item.name}
                                 uid={item.uid}
-                                rate_average={item.rate_average}
-                                rate_count={item.rate_count}
+                                rate_average={item.rating}
+                                rate_count={item.rating_count}
                                 price={item.price}
                                 discount={item.discount}
                             />

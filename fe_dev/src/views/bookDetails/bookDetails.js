@@ -8,6 +8,7 @@ import ProductGrid from '../../utils/ProductGrid';
 import RateBar from '../../utils/RateBar';
 import BookRate from './BookRate';
 import PageFooter from '../../utils/PageFooter';
+import { commonFunction } from '../../utils/constants/commonFunction';
 
 const fields = [
     {
@@ -15,19 +16,15 @@ const fields = [
         text: 'Tác giả',
     },
     {
-        tag: 'numpage',
+        tag: 'number_pages',
         text: 'Số trang',
-    },
-    {
-        tag: 'bookCover',
-        text: 'Loại bìa',
     },
     {
         tag: 'publisher',
         text: 'Nhà xuất bản',
     },
     {
-        tag: 'ctyph',
+        tag: 'issuing_company',
         text: 'Công ty phát hành',
     },
 ]
@@ -40,16 +37,16 @@ export default class bookDetails extends PureComponent {
             uid: 0,
             name: '',
             discount: '',
-            rate_average: 0,
-            rate_count: 0,
+            rating: 0,
+            rating_count: 0,
             price: 0,
-            author: '',
-            numpage: 0,
-            bookCover: '',
+            authors: '',
+            number_pages: 0,
             publisher: '',
-            ctyph: '',
-            images: [],
+            issuing_company: '',
+            image: [],
             relatedProducts: [],
+            description: ''
         }
     }
     componentDidUpdate(prevProps, prevState) {
@@ -64,16 +61,24 @@ export default class bookDetails extends PureComponent {
 
     prepareData = async () => {
         const uid = this.props.match.params.bookID;
-        const bookInfo = await ProductServices.getBookDetails(uid)
-        this.setState(Object.assign(bookInfo, { pageTitle: bookInfo.name ? bookInfo.name : 'IRIS' }))
-        const relatedProducts = await ProductServices.getRelatedProducts(uid)
-        this.setState({
-            relatedProducts: relatedProducts,
-        })
-        const categories = await ProductServices.getCategories()
-        this.setState({
-            categories: categories
-        })
+        let [success, body] = await ProductServices.getBookDetails(uid)
+        if (success) {
+            this.setState(Object.assign(body.data, { pageTitle: body.data.name ? body.data.name : 'IRIS' }))
+        }
+        [success, body] = await ProductServices.getRelatedProducts(uid)
+        console.log(body.data)
+        if (success) {
+            this.setState({
+                relatedProducts: body.data,
+            })
+        }
+        [success, body] = await ProductServices.getCategories()
+        if (success) {
+            const categories = body.data.root.children[0]['Sách Tiếng Việt'].children.map(item => commonFunction.reformatCategory(item))
+            this.setState({
+                categories: categories
+            })
+        }
     }
 
     render() {
@@ -88,25 +93,31 @@ export default class bookDetails extends PureComponent {
                         <div className='info-title'>
                             <div className='book-title'>{this.state.name}</div>
                             <div className='rate-detail'>
-                                <RateBar rate={this.state.rate_average} />
-                                <div className='rate-count textTwo'>{this.state.rate_count + ' đánh giá'}</div>
+                                <RateBar rate={this.state.rating} />
+                                <div className='rate-count textTwo'>{this.state.rating_count + ' đánh giá'}</div>
                             </div>
                         </div>
                         <div className='info-detail'>
-                            <ImagesViewer images={this.state.images} />
+                            <ImagesViewer image={this.state.image} />
                             <div className='info-table'>
                                 <div className='info-row'>
                                     <div>THÔNG TIN CHI TIẾT</div>
                                     <div>
                                         <span className='price'><b>{this.state.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ'}</b></span>
-                                        <span className='discount'>{this.state.discount}</span>
+                                        <span className='discount'>{`-${this.state.discount}%`}</span>
                                     </div>
                                 </div>
                                 {fields.map(field =>
-                                    <div className='info-row' key={field.tag}>
-                                        <div className='textTwo'>{field.text}</div>
-                                        <div>{this.state[field.tag]}</div>
-                                    </div>)}
+                                    field.tag === 'athors' ?
+                                        <div className='info-row' key={field.tag}>
+                                            <div className='textTwo'>{field.text}</div>
+                                            <div>{this.state[field.tag][0].name}</div>
+                                        </div> :
+                                        <div className='info-row' key={field.tag}>
+                                            <div className='textTwo'>{field.text}</div>
+                                            <div>{this.state[field.tag]}</div>
+                                        </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -116,7 +127,7 @@ export default class bookDetails extends PureComponent {
                         datas={this.state.relatedProducts}
                     />
                     <div className='wrapper'>
-                        <BookDescription uid={this.props.match.params.bookID} />
+                        <BookDescription uid={this.props.match.params.bookID} description={this.state.description} />
                         <BookRate uid={this.props.match.params.bookID} />
                     </div>
                 </div>

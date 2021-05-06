@@ -20,11 +20,11 @@ export default class Navigator extends PureComponent {
 
     render() {
         return (
-            this.props.data ?
+            this.props.data && this.props.data.length ?
                 <div className='common-content-wrapper filter'>
                     <div>DANH MỤC SÁCH</div>
                     {this.props.data && this.props.data.map && this.props.data.map(
-                        (item, index) => { return !this.state.isCollapsed || (index < numRowColap) ? <Link key={index} to={item.url ? '/the-loai' + item.url : ''}>{item.label || ''}</Link> : null }
+                        (item, index) => { return !this.state.isCollapsed || (index < numRowColap) ? <Link key={index} to={item.uid ? '/the-loai/' + item.uid : ''}>{item.label || ''}</Link> : null }
                     )}
                     {this.props.data && (this.props.data.length > numRowColap) ?
                         <IconAndTextButton

@@ -28,7 +28,7 @@ export default class AuthorFilter extends PureComponent {
     render() {
         return (
             <div className='common-content-wrapper publisher-filter filter'>
-                <div>NHÀ XUẤT BẢN</div>
+                <div>TÁC GIẢ</div>
                 <Field
                     name='author'
                     type={FieldType.SINGLE_SELECT}
