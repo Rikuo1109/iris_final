@@ -5,6 +5,9 @@ from rest_framework import filters
 from utils.services import product as product_services
 from . import serializers, models, filters as product_filters
 from utils.recomender.CF import cf_filter, cb_filter
+from django.core.paginator import Paginator
+
+
 
 
 class ProductViewSet(viewset.BaseView):
@@ -12,6 +15,7 @@ class ProductViewSet(viewset.BaseView):
     serializer_classes = {
         'item_list': serializers.ItemListSerializer,
         'item_create': serializers.ItemCreateSerializer,
+        'item_info': serializers.ItemInfoSerializer,
     }
 
     @decorators.action(methods=['GET', ], detail=False)
@@ -48,10 +52,27 @@ class ProductViewSet(viewset.BaseView):
         except exceptions.ValidationError as e:
             return self.get_response(data=e.detail, error_code=e.status_code)
 
+    @decorators.action(methods=['GET', ], detail=False)
+    def item_info(self, request):
+
+        book_id = request.GET.get('id', None)
+        print(book_id)
+        try:
+            from .models import Book 
+            book = Book.objects.get(uid=book_id)
+            serializer = self.get_serializer(book)
+
+            return self.get_response(data=serializer.data, error_code=http_code.HttpSuccess)
+
+
+        except Exception as e:
+            return self.get_response(data=str(e), error_code=500)
+
+            
 
 class PopularProduct(generics.ListAPIView):
     from rest_framework import pagination
-    queryset = models.Book.objects.all()
+    queryset = models.Book.objects.order_by('-rating_count')
     serializer_class = serializers.ItemSerializer
     permission_classes = (permissions.AllowAny, )
     filter_backends = [filters.SearchFilter, product_filters.PriceFilter,
@@ -60,13 +81,13 @@ class PopularProduct(generics.ListAPIView):
                        product_filters.PublisherFilter,
                        product_filters.RatingFilter, ]
     search_fields = ['name']
-    pagination_classes = pagination.PageNumberPagination
-    # filter_backends = ()
-
+    
     def list(self, request):
         from django.http import JsonResponse
-        try:
+        try: 
             data = super().list(request).data
+            # paginator = Paginator(data, 25) 
+            # print(data)
             return JsonResponse({
                 'data': data,
                 'error_code': 0
@@ -78,6 +99,57 @@ class PopularProduct(generics.ListAPIView):
             'error_code': 0
         })
 
+class AuthorView(generics.ListAPIView):
+    queryset = models.Author.objects.order_by('name')
+    serializer_class = serializers.AuthorSerializer
+    permission_classes = (permissions.AllowAny,)
+    filter_backends = []
+    search_fields = ['name']
+
+
+    def list(self, request):
+        from django.http import JsonResponse
+        try: 
+            data = super().list(request).data
+            
+            # paginator = Paginator(data, 25) 
+            # print(data)
+            return JsonResponse({
+                'data': data,
+                'error_code': 0
+            })
+        except Exception as e:
+            print(f"Exception while filtering: {e}")
+        return JsonResponse({
+            'data': None,
+            'error_code': 0
+        })
+
+class PublisherView(generics.ListAPIView):
+    queryset = models.Book.objects.order_by('publisher').values('publisher').distinct()
+    serializer_class = serializers.PublisherSerializer
+    permission_classes = (permissions.AllowAny,)
+    filter_backends = []
+    search_fields = ['name']
+
+
+    def list(self, request):
+        from django.http import JsonResponse
+        try: 
+            data = super().list(request).data
+            # data = list(set([x.publisher for x in data]))
+            # paginator = Paginator(data, 25) 
+            # print(data)
+            return JsonResponse({
+                'data': data,
+                'error_code': 0
+            })
+        except Exception as e:
+            print(f"Exception while filtering: {e}")
+        return JsonResponse({
+            'data': None,
+            'error_code': 0
+        })
 
 class RecommendProduct(generics.ListAPIView):
     from rest_framework import pagination
@@ -90,7 +162,6 @@ class RecommendProduct(generics.ListAPIView):
                        product_filters.PublisherFilter,
                        product_filters.RatingFilter, ]
     search_fields = ['name']
-    pagination_classes = pagination.PageNumberPagination
     # filter_backends = ()
 
     def list(self, request):
@@ -100,9 +171,11 @@ class RecommendProduct(generics.ListAPIView):
         from functools import reduce
         # from utils.recomender.CF import cf_filter
         # Get id of user from request
-        user_id = request.GET.get('id', None)
-        # Select user from database
-        user = User.objects.get(email=f'{user_id}@gmail.com')
+        # user_id = request.GET.get('id', None)
+        # # Select user from database
+        # user = User.objects.get(email=f'{user_id}@gmail.com')
+        user = request.user
+        user_id = "5582356"
         # Select interactions of user from database
         user_interaction = Interaction.objects.filter(user=user)
         # Get books user rated
@@ -118,7 +191,7 @@ class RecommendProduct(generics.ListAPIView):
         recommended_book = list(filter(lambda book: book.sku not in [
                                 book.sku for book in rated_books], recommended_book))
         recommended_book = cb_filter(rated_books, recommended_book)
-        # recommended_book = cf_filter(user_id, recommended_book, 10)
+        recommended_book = cf_filter(user_id, recommended_book, 8)
         from django.http import JsonResponse
         # print(self.get_serializer())
         try:
@@ -138,6 +211,7 @@ class RecommendProduct(generics.ListAPIView):
 class CategoryTree(generics.ListAPIView):
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
+    pagination_class = None
 
     def list(self, request):
         from django.http import JsonResponse

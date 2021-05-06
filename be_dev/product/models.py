@@ -58,7 +58,7 @@ class Book(BaseModel):
 
     @property
     def discount(self):
-        return (self.first_price - self.price) / self.first_price * 100 if (self.first_price > 0) else 0
+        return ((self.first_price - self.price) * 100) // self.first_price if (self.first_price > 0) else 0
 
     def __str__ (self):
         return self.name
