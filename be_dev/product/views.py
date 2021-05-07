@@ -4,11 +4,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from utils.services import product as product_services
 from . import serializers, models, filters as product_filters
+<<<<<<< HEAD
 from utils.recomender.CF import cf_filter
 from django.core.paginator import Paginator
 
 # from utils.recomender.CB_model import cb as cb_filter
 
+=======
+from utils.recomender.CF import cf_filter, cb_filter
+from django.core.paginator import Paginator
+
+>>>>>>> 8a95ab29ee79afbc04033d5b7a8bf6f207906988
 
 
 
@@ -121,7 +127,13 @@ class PublisherView(generics.ListAPIView):
         from django.http import JsonResponse
         try: 
             data = super().list(request).data
+<<<<<<< HEAD
 
+=======
+            # data = list(set([x.publisher for x in data]))
+            # paginator = Paginator(data, 25) 
+            # print(data)
+>>>>>>> 8a95ab29ee79afbc04033d5b7a8bf6f207906988
             return JsonResponse({
                 'data': data,
                 'error_code': 0
@@ -145,6 +157,7 @@ class RecommendProduct(generics.ListAPIView):
     def list(self, request):
         from interaction.models import Interaction
         from product.models import Book
+<<<<<<< HEAD
 
         user = request.user
 
@@ -164,6 +177,32 @@ class RecommendProduct(generics.ListAPIView):
 
         recommend_book = cf_filter(categories.values_list('categories__cf_index', flat=True), recommend_book, 8)
         
+=======
+        from functools import reduce
+        # from utils.recomender.CF import cf_filter
+        # Get id of user from request
+        # user_id = request.GET.get('id', None)
+        # # Select user from database
+        # user = User.objects.get(email=f'{user_id}@gmail.com')
+        user = request.user
+        user_id = "5582356"
+        # Select interactions of user from database
+        user_interaction = Interaction.objects.filter(user=user)
+        # Get books user rated
+        rated_books = [interaction.book for interaction in user_interaction]
+
+        # Get catefories of rated books
+        categories = []
+        for book in rated_books:
+            for category in book.categories.all():
+                if category not in categories:
+                    categories.append(category)
+        recommended_book = Book.objects.filter(categories__in=categories)
+        recommended_book = list(filter(lambda book: book.sku not in [
+                                book.sku for book in rated_books], recommended_book))
+        recommended_book = cb_filter(rated_books, recommended_book)
+        recommended_book = cf_filter(user_id, recommended_book, 8)
+>>>>>>> 8a95ab29ee79afbc04033d5b7a8bf6f207906988
         from django.http import JsonResponse
 
         try:
