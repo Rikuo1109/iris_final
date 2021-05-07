@@ -70,13 +70,31 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = Author
         fields = ('uid', 'name')
 
+class PublisherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ['publisher']
+
 class ItemSerializer(serializers.ModelSerializer):
-    categories = CategorySerializer(read_only=True, many=True)
+    # categories = CategorySerializer(read_only=True, many=True)
+    # authors = AuthorSerializer(read_only=True, many=True)
+    image = serializers.SerializerMethodField()
+    class Meta:
+        model = Book
+        fields = ['uid','name', 'rating', 'price', 'image', 'rating_count', 'rating_sum','discount']
+
+    def get_image(self, instance):
+        try: 
+            return Image.objects.get(book=instance).url
+        except:
+            return ''
+
+class ItemInfoSerializer(serializers.ModelSerializer):
     authors = AuthorSerializer(read_only=True, many=True)
     image = serializers.SerializerMethodField()
     class Meta:
         model = Book
-        fields = '__all__'
+        fields = ('uid','name', 'rating', 'price', 'image', 'rating_count', 'rating_sum','discount', 'description', 'authors', 'number_pages', 'issuing_company', 'publisher')
 
     def get_image(self, instance):
         try: 
