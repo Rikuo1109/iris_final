@@ -15,6 +15,10 @@ class Category(BaseModel):
 
     parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True)
 
+    code = models.IntegerField(default=-1)
+
+    cf_index = models.IntegerField(default=-1)
+
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -28,7 +32,7 @@ class Author(BaseModel):
 
 class Book(BaseModel):
     
-    name = models.CharField(default='Name of book', max_length=100, unique=True)
+    name = models.CharField(default='Name of book', max_length=100, unique=False)
 
     price = models.IntegerField(default=0, validators=[validate_positive_number])
     first_price = models.IntegerField(default=0, validators=[validate_positive_number])
@@ -48,13 +52,15 @@ class Book(BaseModel):
 
     authors = models.ManyToManyField(to=Author, related_name='Authors_of_book')
 
+    sku = models.IntegerField(default=-1)
+
     @property
     def rating(self):
         return (self.rating_sum // self.rating_count) if (self.rating_count > 0) else 0
 
     @property
     def discount(self):
-        return (self.first_price - self.price) / self.first_price * 100 if (self.first_price > 0) else 0
+        return ((self.first_price - self.price) * 100) // self.first_price if (self.first_price > 0) else 0
 
     def __str__ (self):
         return self.name

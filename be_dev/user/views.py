@@ -18,12 +18,30 @@ class AuthViewSet(viewset.BaseView):
         'reset_password': user_serializers.ResetPasswordSerializer,
     }
 
+    @decorators.action(methods=['GET', ], detail=False)
+    def infor(self, request):
+        try:
+            user = request.user
+            return self.get_response(
+                data = {
+                    'name': user.name,
+                    'is_admin': user.is_admin,
+                    'uid': user.uid
+                }, 
+                error_code=http_code.HttpSuccess
+            )
+        except:
+            return self.get_response(
+                data = None, 
+                error_code=500
+            )
+
     @decorators.action(methods=['POST', ], detail=False)
     def register(self, request):
         """
             A api to register a new user on the system
 
-            @param[request]: email & password
+            :param request: email & password
 
             @do:
                 -> Check valid email and password, If error, return response with status code 400 (error.status_code)
@@ -83,8 +101,9 @@ class AuthViewSet(viewset.BaseView):
 
     @decorators.action(methods=['GET', ],detail=False, permission_classes=[permissions.IsAuthenticated, ])
     def logout(self, request):
-        data, is_complete = user_services.logout_user_account(request.data)
+        data, is_complete = user_services.logout_user_account(request.GET)
         if is_complete:
+            print("yes")
             return self.get_response(data=None, error_code=http_code.HttpSuccess)
         return self.get_response(data=data, error_code=http_code.HttpSomethingWentWrong)
 
@@ -129,9 +148,3 @@ class AuthViewSet(viewset.BaseView):
                 data = e.detail,
                 error_code=e.status_code
             )
-
-
-
-
-
-

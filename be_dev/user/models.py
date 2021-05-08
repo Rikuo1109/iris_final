@@ -2,6 +2,7 @@ from django.db import models
 from utils.model import BaseModel
 from django.contrib.auth import models as django_models
 
+
 class BaseUserManager(django_models.BaseUserManager):
     def create_user(self, email, password=None, is_admin=False):
         """ 
@@ -12,18 +13,19 @@ class BaseUserManager(django_models.BaseUserManager):
             @param: password - A string of password (Unchecked valid password)
             @param: is_admin - Defaults state is False
         """
-        
+
         if not email or password is None:
             raise ValueError('User must have an email address and a password')
 
         user = self.model(
-            email = self.normalize_email(email.lower()),
-            is_admin=is_admin
+            email=self.normalize_email(email.lower()),
+            is_admin=is_admin,
+            name=''
         )
-
+        print(password)
         user.set_password(password)
 
-        user.full_clean()
+        # user.full_clean()
         user.save(using=self._db)
 
         return user
@@ -38,17 +40,18 @@ class BaseUserManager(django_models.BaseUserManager):
         """
 
         user = self.create_user(
-            email = email,
-            password= password,
+            email=email,
+            password=password,
             is_admin=True,
         )
-        
+
         from utils.fields import status
         user.is_superuser = True
         user.status = status.StatusChoices.ACTIVE
         user.save(using=self._db)
 
         return user
+
 
 class User(BaseModel, django_models.AbstractBaseUser, django_models.PermissionsMixin):
 
@@ -61,7 +64,7 @@ class User(BaseModel, django_models.AbstractBaseUser, django_models.PermissionsM
     USERNAME_FIELD = 'email'
 
     is_admin = models.BooleanField(default=False)
-
+    name = models.CharField(max_length=50, default='')
     objects = BaseUserManager()
 
     def __str__(self):
@@ -74,6 +77,3 @@ class User(BaseModel, django_models.AbstractBaseUser, django_models.PermissionsM
     def is_active(self):
         from utils.fields import status
         return not (self.status in (status.StatusChoices.REMOVE, status.StatusChoices.WATTING))
-
-
-
