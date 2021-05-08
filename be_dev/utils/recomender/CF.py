@@ -36,4 +36,9 @@ def cf_filter(book_cat, booklist=[], num=None):
     idx = scores.argsort()[-1*num:][::-1] if type(num) is int else scores.argsort()[::-1]
     skus = book_table.iloc[idx].id.to_list()
 
-    return booklist.filter(sku__in=skus)
+    clauses = ' '.join(['WHEN sku=%s THEN %s' % (pk, i) for i, pk in enumerate(skus)])
+    ordering = 'CASE %s END' % clauses
+
+    return booklist.filter(sku__in=skus).extra(
+        select={'ordering': ordering}, order_by=('ordering',)
+    )

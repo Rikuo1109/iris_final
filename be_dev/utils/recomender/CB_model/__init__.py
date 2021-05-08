@@ -39,7 +39,14 @@ class CB_MODEL(object):
 
         index = self._similarity(rate_vector, target_vector).flatten().argsort()[::-1]
 
-        return target_items.filter(sku__in=v_target_items.iloc[index].id.to_list())
+        # ordering = 'FIELD(`sku`, %s)' % ','.join(str(id) for id in index)
+
+        clauses = ' '.join(['WHEN sku=%s THEN %s' % (pk, i) for i, pk in enumerate(index)])
+        ordering = 'CASE %s END' % clauses
+
+        return target_items.extra(
+            select={'ordering': ordering}, order_by=('ordering',)
+        )
 
 cb = CB_MODEL()
 

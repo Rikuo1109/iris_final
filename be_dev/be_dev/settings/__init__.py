@@ -18,7 +18,6 @@ INSTALLED_APPS += [
 
 AUTH_USER_MODEL     = 'user.User'
 
-<<<<<<< HEAD
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
@@ -29,18 +28,6 @@ AUTH_USER_MODEL     = 'user.User'
 #         }
 #     }
 # }
-=======
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': './cache',
-        'TIMEOUT': 60,
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
-    }
-}
->>>>>>> 8a95ab29ee79afbc04033d5b7a8bf6f207906988
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

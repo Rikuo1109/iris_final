@@ -11,9 +11,5 @@ urlpatterns = router.urls + [path('list_product/', views.PopularProduct.as_view(
                             path('category_tree/', views.CategoryTree.as_view(), name='Category tree'),\
                             path('recommend/', cache_page(60*60)(views.RecommendProduct.as_view()), name='Recomend Product'),\
                             path('author/', views.AuthorView.as_view(), name='Authors'),\
-<<<<<<< HEAD
                             path('publisher/', views.PublisherView.as_view(), name='Publisher'),\
                             path('related/', views.RelatedProduct.as_view(), name='Related Product')]
-=======
-                            path('publisher/', views.PublisherView.as_view(), name='Publisher')]
->>>>>>> 8a95ab29ee79afbc04033d5b7a8bf6f207906988
