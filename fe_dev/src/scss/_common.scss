@@ -75,6 +75,8 @@ html body {
 }
 #main-page {
     background: rgba($color: #EEFFFF, $alpha: 0.75);
+    width: 100vw;
+    min-height: 100vh;
 }
 .page-content{
     min-height: calc(100vh - 56px - 220px);

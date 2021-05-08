@@ -6,7 +6,7 @@ export default class ProductItem extends PureComponent {
         return (
             <div className='product-item'>
                 <img src={(this.props.image && this.props.image.replace('cache/w64', 'cache/w200')) || ''} alt={this.props.name || 'Hình ảnh cho sản phẩm'} />
-                <div><b>{this.props.name || ''}</b></div>
+                <div class='name'><b>{this.props.name || ''}</b></div>
                 <div className='rate-detail'>
                     <RateBar rate={this.props.rate_average} />
                     <div className='rate-count textTwo'>{`(${this.props.rate_count})`}</div>

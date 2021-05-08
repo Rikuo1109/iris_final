@@ -9,6 +9,7 @@ import RateBar from '../../utils/RateBar';
 import BookRate from './BookRate';
 import PageFooter from '../../utils/PageFooter';
 import { commonFunction } from '../../utils/constants/commonFunction';
+import ProductListType from '../../utils/constants/enums/ProductListType';
 
 const fields = [
     {
@@ -69,7 +70,7 @@ export default class bookDetails extends PureComponent {
         console.log(body.data)
         if (success) {
             this.setState({
-                relatedProducts: body.data,
+                relatedProducts: body.data && body.data.results,
             })
         }
         [success, body] = await ProductServices.getCategories()
@@ -121,11 +122,12 @@ export default class bookDetails extends PureComponent {
                             </div>
                         </div>
                     </div>
-                    <ProductGrid
+                    {this.state.relatedProducts && this.state.relatedProducts.length ? <ProductGrid
+                        type={ProductListType.OVERFLOW}
                         title='SẢN PHẨM TƯƠNG TỰ'
                         numColumn={5}
                         datas={this.state.relatedProducts}
-                    />
+                    /> : null}
                     <div className='wrapper'>
                         <BookDescription uid={this.props.match.params.bookID} description={this.state.description} />
                         <BookRate uid={this.props.match.params.bookID} />

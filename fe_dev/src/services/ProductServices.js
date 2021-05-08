@@ -830,8 +830,29 @@ const relaPros = [
         discount: '-15%',
     },
 ]
-const getRelatedProducts = bookId => {
-    return [true, { data: relaPros }]
+const getRelatedProducts = async bookId => {
+    if (API_CONST.TEST_MODE) {
+        return [true, { data: relaPros }]
+    }
+    let response;
+    let options = {
+        method: 'GET',
+    }
+    let url = API_CONST.GET_RELATED_BOOK + `?id=${bookId}`;
+    // tokenUtil.updateOrCreateHeader(options);
+    try {
+        response = await fetch(url, options);
+        let body = await response.json();
+        //tokenUtil.checkResponseErrorCode(body, options.method);
+        return [body.error_code === 0, body];
+    }
+    catch (e) {
+        if (response && response.statusText) {
+            return [false, response.statusText];
+        } else {
+            return [false, e.message];
+        }
+    }
 }
 const des = 'Để hoàn thành nhiệm vụ gìn giữ hòa bình cho hai nước Ostania và Westalis, gia đình Forger đã vượt qua kì thi tuyển đầy thử thách của học viện danh tiếng. Nhưng sau đó Anya phải trở thành học sinh ưu tú của trường để tiếp cận Desmond. Kế hoạch tác chiến “xây dựng tình bạn” của Twilight sẽ được thực hiện thế nào đây…!?<br /><br />TATSUYA ENDO<br /><br />Có một thuyết cho rằng gián điệp là nghề nghiệp cổ xưa thứ 2 trên thế giới. Lừa lọc, đánh bẫy, đó chính là lịch sử dối trá của nhân loại.<br />Ngay cả tôi, ngày nào cũng đưa cho biên tập viên thông tin sai lệch rằng: “Trong hôm nay tôi sẽ nộp bản thảo!” đấy.<br /><p>Giá sản phẩm trên Tiki đã bao gồm thuế theo luật hiện hành. Tuy nhiên tuỳ vào từng loại sản phẩm hoặc phương thức, địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như phí vận chuyển, phụ phí hàng cồng kềnh, ...</p>'
 const getBookDescription = bookId => {
@@ -845,7 +866,7 @@ const getRecomendedProducts = async (userID, categoryID) => {
     let options = {
         method: 'GET',
     }
-    let url = API_CONST.GET_RECOMMEND_BOOK + '?id=10016002' //+ `?userID=${userID}&categoryID=${categoryID}`;
+    let url = API_CONST.GET_RECOMMEND_BOOK// + `?userID=${userID}&categoryID=${categoryID}`;
     tokenUtil.updateOrCreateHeader(options);
     try {
         response = await fetch(url, options);
@@ -887,15 +908,27 @@ const getCommonProducts = async (filter) => {
     }
 }
 
-const rates = [
-    {
-        numRate: 4,
-        content: 'Đây là nội dung bình luận',
-        user: 'Người dùng',
-        time: '21/01/2021',
+const getRate = async bookID => {
+    let response;
+    let options = {
+        method: 'GET',
     }
-]
-const getRate = bookID => rates
+    let url = API_CONST.GET_RATES + `?id=${bookID}`;
+    // tokenUtil.updateOrCreateHeader(options);
+    try {
+        response = await fetch(url, options);
+        let body = await response.json();
+        //tokenUtil.checkResponseErrorCode(body, options.method);
+        return [body.error_code === 0, body];
+    }
+    catch (e) {
+        if (response && response.statusText) {
+            return [false, response.statusText];
+        } else {
+            return [false, e.message];
+        }
+    }
+}
 export const ProductServices = {
     getCategories,
     getBookDetails,

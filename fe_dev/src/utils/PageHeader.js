@@ -111,7 +111,6 @@ class PageHeader extends PureComponent {
                         <Search
                             placeHolder='Bạn cần tìm gì ...'
                         />
-                        <a href="tel:+84919852893">Call</a>
                     </div>
                     <div className='flex-align-right'>
                         <ProfileContext.Consumer>
@@ -144,20 +143,22 @@ class PageHeader extends PureComponent {
                                         />}
                                         childComponent={
                                             <div className='hover-table'>
+
+                                                {profile.isAdmin ?
+                                                    <IndexItem
+                                                        key='1'
+                                                        label='Quản lý hệ thống'
+                                                        className='account-menu'
+                                                        url={routeConstants.ROUTE_ADMIN}
+                                                    /> :
+                                                    <IndexItem
+                                                        key='1'
+                                                        label='Quản lý tài khoản'
+                                                        className='account-menu'
+                                                        url={routeConstants.ROUTE_ACCOUNT}
+                                                    />}
                                                 <IndexItem
-                                                    key='1'
-                                                    label='Quản lý tài khoản'
-                                                    className='account-menu'
-                                                    url={routeConstants.ROUTE_ACCOUNT}
-                                                />
-                                                {profile.isAdmin ? <IndexItem
                                                     key='2'
-                                                    label='Quản lý hệ thống'
-                                                    className='account-menu'
-                                                    url={routeConstants.ROUTE_ADMIN}
-                                                /> : null}
-                                                <IndexItem
-                                                    key='3'
                                                     label='Đăng xuất'
                                                     className='account-menu'
                                                     onClick={() => this.handleLogout(profile.reloadUserData)}
