@@ -21,6 +21,9 @@ const updateOrCreateHeader = header => {
     return header;
 }
 const checkResponseErrorCode = (data, successMessage, customErrorMessage) => {
+    if (typeof data === 'string') {
+        toastUtil.showErrorMsg(data)
+    }
     if (successMessage === void (0)) {
         successMessage = 'Thành Công!'
     }

@@ -5,7 +5,7 @@ const LOGIN = API_ROOT + 'api/auth/login'
 const GET_USER_INFO = API_ROOT + 'api/auth/infor'
 const LOGOUT = API_ROOT + 'api/auth/logout'
 
-const GET_CATEGORRIES = API_ROOT + 'api/product/category_tree'
+const GET_CATEGORRIES = API_ROOT + 'api/product/category_tree/'
 const GET_BOOK_INFO = API_ROOT + 'api/product/item_info'
 const GET_RECOMMEND_BOOK = API_ROOT + 'api/product/recommend/'
 const GET_RELATED_BOOK = API_ROOT + 'api/product/related/'

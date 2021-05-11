@@ -1,19 +1,21 @@
 import pandas as pd
 
-from sklearn.metrics.pairwise import cosine_similarity #linear_kernel
+from sklearn.metrics.pairwise import cosine_similarity  # linear_kernel
 
 import numpy as np
 
 DATA_FILE = "./utils/recomender/CB_model/dataset/bert_feature_name.csv"
 
-to_numpy = lambda x: np.fromstring(x[3:-2].replace("\n",''), sep= ' ')
+
+def to_numpy(x): return np.fromstring(x[3:-2].replace("\n", ''), sep=' ')
+
 
 class CB_MODEL(object):
-    def __init__(self, threshold = 0.5):
+    def __init__(self, threshold=0.5):
         self._dataset = pd.read_csv(DATA_FILE)
         self._dataset['feature'] = self._dataset['feature'].apply(to_numpy)
         self._threshold = threshold
-    
+
     def __str__(self):
         return len(self._dataset)
 
@@ -29,24 +31,26 @@ class CB_MODEL(object):
         return cosine_similarity(v_base_items, v_compare_items)
 
     def run(self, rate_items, target_items):
-        v_rate_items = self.get_item_vector_by_uid(rate_items) 
+        v_rate_items = self.get_item_vector_by_uid(rate_items)
         v_target_items = self.get_item_vector_by_uid(target_items)
 
-        #Implement the CB filter here
+        # Implement the CB filter here
 
         rate_vector = np.array(v_rate_items.feature.to_list())
         target_vector = np.array(v_target_items.feature.to_list())
 
-        index = self._similarity(rate_vector, target_vector).flatten().argsort()[::-1]
+        index = self._similarity(
+            rate_vector, target_vector).flatten().argsort()[::-1]
 
         # ordering = 'FIELD(`sku`, %s)' % ','.join(str(id) for id in index)
-
-        clauses = ' '.join(['WHEN sku=%s THEN %s' % (pk, i) for i, pk in enumerate(index)])
+        skus = v_target_items.iloc[index].id.to_list()
+        clauses = ' '.join(['WHEN sku=%s THEN %s' % (pk, i)
+                           for i, pk in enumerate(skus)])
         ordering = 'CASE %s END' % clauses
 
         return target_items.extra(
             select={'ordering': ordering}, order_by=('ordering',)
         )
 
-cb = CB_MODEL()
 
+cb = CB_MODEL()

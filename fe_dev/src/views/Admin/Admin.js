@@ -46,7 +46,7 @@ export default class Admin extends PureComponent {
                     <div className='admin-table'>
                         <BookTable display={this.state.active === AdminNavType.BOOK} />
                         <UserTable display={this.state.active === AdminNavType.USER} />
-                        <CategoryTable display={this.state.active === AdminNavType.CATEGORY} />
+                        <CategoryTable data={this.state.categories} display={this.state.active === AdminNavType.CATEGORY} />
                         <AuthorTable display={this.state.active === AdminNavType.AUTHOR} />
                     </div>
                 </div>

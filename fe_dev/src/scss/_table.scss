@@ -243,7 +243,7 @@
 }
 
 .edit-btn {
-    // background-image: url(../assets/icons/edit.svg);
+    background-image: url(../assets/icons/edit.svg);
 }
 
 .edit-btn:hover {
@@ -259,11 +259,11 @@
 }
 
 .del-btn {
-    // background-image: url(../assets/icons/delete.svg);
+    background-image: url(../assets/icons/delete.svg);
 }
 
 .del-btn:hover {
-    background-color: rgba($color: $red, $alpha: 0.1);
+    background-color: rgba($color:$red, $alpha: 0.1);
 }
 
 .gray {

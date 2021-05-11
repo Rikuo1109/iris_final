@@ -8,6 +8,7 @@ import AuthorFilter from './AuthorFilter';
 import { AuthorServices } from '../services/AuthorServices';
 import ProductGrid from './ProductGrid';
 import { ProductServices } from '../services/ProductServices';
+import ProductListType from './constants/enums/ProductListType';
 export default class ProductsPage extends PureComponent {
     constructor(props) {
         super(props);
@@ -118,6 +119,7 @@ export default class ProductsPage extends PureComponent {
                 <div className='right-content'>
                     {this.state.recomendedProducts.length ?
                         <ProductGrid
+                            type={ProductListType.OVERFLOW}
                             title='SẢN PHẨM GỢI Ý'
                             numColumn={4}
                             datas={this.state.recomendedProducts}

@@ -714,9 +714,7 @@ const cats =
     "error_code": 0
 }
 const getCategories = async () => {
-    if (API_CONST.TEST_MODE) {
-        return [true, cats]
-    }
+    return [true, cats]
     let response;
     let options = {
         method: 'GET',
@@ -891,7 +889,7 @@ const getCommonProducts = async (filter) => {
     let options = {
         method: 'GET',
     }
-    let url = API_CONST.GET_COMMON_BOOK + filter;
+    let url = API_CONST.GET_COMMON_BOOK + (filter || '');
     // tokenUtil.updateOrCreateHeader(options);
     try {
         response = await fetch(url, options);

@@ -13,6 +13,7 @@ class PageHeader extends PureComponent {
         this.state = {
             indexIsShowed: false,
             children: null,
+            focus: null,
         }
     }
     componentDidUpdate(prevProps, prevState) {
@@ -42,6 +43,11 @@ class PageHeader extends PureComponent {
     showChildren = data => {
         this.setState({
             children: data
+        })
+    }
+    focus = uid => {
+        this.setState({
+            focus: uid,
         })
     }
     handleLogout = async (reloadUserData) => {
@@ -87,8 +93,8 @@ class PageHeader extends PureComponent {
                                                 label={item.label}
                                                 children={item.children || null}
                                                 url={'/the-loai/' + item.uid}
-                                                onMouseOver={() => this.showChildren(item.children)}
-                                                className={(item.children && this.state.children === item.children) ? 'focus' : ''}
+                                                onMouseOver={() => this.focus(item.uid)}
+                                                className={this.state.focus === item.uid ? 'focus' : ''}
                                             />}
                                             childComponent={
                                                 item.children && item.children.length && item.children.map && <div className='hover-table'>

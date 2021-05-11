@@ -1,6 +1,7 @@
 import { Tooltip } from 'antd';
 import React, { PureComponent } from 'react'
 import Table from '../../utils/table/Table';
+import TreeTable from '../../utils/table/TreeTable';
 
 export default class CategoryTable extends PureComponent {
     constructor(props) {
@@ -18,8 +19,8 @@ export default class CategoryTable extends PureComponent {
     columns = [
         {
             header: 'Thể loại',
-            name: 'images',
-            cell: 'images',
+            name: 'label',
+            cell: 'label',
             headerClasses: 'table-header',
             cellClasses: 'table-cell',
         },
@@ -82,20 +83,20 @@ export default class CategoryTable extends PureComponent {
     render() {
         return (
             this.props.display ?
-                <Table
+                <TreeTable
                     rowKey='uid'
                     isLoading={this.state.isLoadingTable}
-                    data={this.state.data}
+                    data={this.props.data}
                     className='df-table-container'
                     classNamePagination='km-pagination'
                     columns={this.state.columns}
-                    pagination={{
-                        currentPage: this.state.currentPage,
-                        pageSize: this.state.pageSize,
-                        totalRows: this.state.totalRows,
-                        leftLabel: 'Người dùng:',
-                    }}
-                    apiPagination={this.handlePagination}
+                // pagination={{
+                //     currentPage: this.state.currentPage,
+                //     pageSize: this.state.pageSize,
+                //     totalRows: this.state.totalRows,
+                //     leftLabel: 'Người dùng:',
+                // }}
+                // apiPagination={this.handlePagination}
                 /> : null
         )
     }
