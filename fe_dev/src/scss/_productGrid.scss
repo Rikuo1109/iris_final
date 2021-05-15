@@ -17,7 +17,7 @@
     display: flex;
     overflow-x: auto;
 }
-.product-grid-wrapper:hover .product-overflow .product{
+.product-grid-wrapper:hover .product.product-overflow{
     position: relative;
     .scroll-btn {
         display: unset;

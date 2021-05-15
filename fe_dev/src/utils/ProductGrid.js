@@ -27,9 +27,9 @@ export default class ProductGrid extends PureComponent {
     render() {
         const type = this.props.type === ProductListType.OVERFLOW ? 'product-overflow hide-scrollbar' : 'product-grid'
         return (
-            <div className='common-content-wrapper product-grid-wrapper'>
+            <div className={`common-content-wrapper product-grid-wrapper`} >
                 <div className='title'>{this.props.title}</div>
-                <div className='product'>
+                <div className={`product ${type}`}>
                     <LeftOutlined className='scroll-btn' onClick={() => this.hScroll(-1)} />
                     <div className={type} ref={this.ref}>
                         {this.props.datas && this.props.datas.map && this.props.datas.map(item =>
