@@ -1,6 +1,5 @@
 import { Tooltip } from 'antd';
 import React, { PureComponent } from 'react'
-import Table from '../../utils/table/Table';
 import TreeTable from '../../utils/table/TreeTable';
 
 export default class CategoryTable extends PureComponent {

@@ -166,6 +166,13 @@
     padding: 0px;
     margin: 10px;
     height: 44px;
+    transition: all 2s ease-out;
+    &.collap{
+        display: none;
+    }
+    &:hover {
+        background-color: $hover;
+    }
 }
 
 .unread {
@@ -174,10 +181,6 @@
     margin: 10px;
     height: 44px;
     background-color: rgba($blue, 0.08);
-}
-
-.row-table:hover {
-    background-color: $hover;
 }
 
 .unread:hover {
@@ -199,6 +202,8 @@
 }
 
 .table-cell {
+    display: flex;
+    align-items: center;
     padding: 3px 3px;
     font-family: $fontMedium;
     letter-spacing: 0.02em;

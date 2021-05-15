@@ -86,3 +86,10 @@
         background: url(../assets/icons/ic_category_active.svg);
     }
 }
+.ic-dropdown {
+    background-image: url('../assets/icons/ic_arrow_right_16.svg');
+    transition: all 0.2s ease-in-out;
+}
+.transform-90 {
+    transform: rotate(90deg);
+}

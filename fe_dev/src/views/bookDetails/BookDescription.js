@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { ProductServices } from '../../services/ProductServices';
-import IconAndTextButton from '../../utils/IconAndTextButton';
+import CollapableWrapper from '../../utils/CollapableWrapper';
 
 export default class BookDescription extends PureComponent {
     constructor(props) {
@@ -27,20 +27,9 @@ export default class BookDescription extends PureComponent {
         return (
             <div className='common-content-wrapper'>
                 <div className='title'>MÔ TẢ</div>
-                <div className={`description ${this.state.isCollapsed ? 'collapsed' : 'expand'}`} dangerouslySetInnerHTML={{ '__html': this.props.description }} />
-                <IconAndTextButton
-                    texts={[{
-                        text: this.state.isCollapsed ? 'Xem thêm' : 'Thu gọn',
-                    }]}
-                    icons={[
-                        {
-                            icon: (this.state.isCollapsed ? 'arrow-down-icon' : 'arrow-up-icon') + ' icon24'
-                        }
-                    ]}
-                    revert={true}
-                    click={this.toggle}
-                    className='center-button'
-                />
+                <CollapableWrapper>
+                    <div className='description' dangerouslySetInnerHTML={{ '__html': this.props.description }} />
+                </CollapableWrapper>
             </div>
         )
     }

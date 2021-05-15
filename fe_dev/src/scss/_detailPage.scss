@@ -85,7 +85,7 @@ $imageHeight: 60vh;
         padding-right: 24px;
     }
 }
-.description.collapsed {
+.default-collapable-wrapper.collapsed>.child{
     max-height: 40vh;
     overflow-y: hidden;
 }

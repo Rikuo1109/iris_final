@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { ProductServices } from '../../services/ProductServices';
+import CollapableWrapper from '../../utils/CollapableWrapper';
 import RateBar from '../../utils/RateBar';
 
 export default class BookRate extends PureComponent {
@@ -24,17 +25,19 @@ export default class BookRate extends PureComponent {
             datas && datas.length ?
                 <div className='common-content-wrapper'>
                     <div className='title'>ĐÁNH GIÁ</div>
-                    <div className='reviews'>
-                        {datas.map(data =>
-                            <div className='review-wrapper' key={data.uid}>
-                                <div className='review-content'>{data.content || ''}</div>
-                                <div className='row-wrapper'>
-                                    <RateBar rate={data.rating || ''} />
-                                    <div className='reiew-user'>Được đánh giá bởi <b>{data.name || ''}</b> vào {data.updated_at || ''}</div>
+                    <CollapableWrapper>
+                        <div className='reviews'>
+                            {datas.map(data =>
+                                <div className='review-wrapper' key={data.uid}>
+                                    <div className='review-content'>{data.content || ''}</div>
+                                    <div className='row-wrapper'>
+                                        <RateBar rate={data.rating || ''} />
+                                        <div className='reiew-user'>Được đánh giá bởi <b>{data.name || ''}</b> vào {data.updated_at || ''}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    </CollapableWrapper>
                 </div> : null
         )
     }

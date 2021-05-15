@@ -12,38 +12,11 @@ class PageHeader extends PureComponent {
         super(props);
         this.state = {
             indexIsShowed: false,
-            children: null,
             focus: null,
         }
     }
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.toggle !== this.props.toggle) {
-            this.setState({
-                indexIsShowed: false,
-            })
-        }
-    }
 
-    showIndex = () => {
-        if (!this.state.indexIsShowed) {
-            this.toggle()
-        }
-    }
-    hideIndex = () => {
-        if (this.state.indexIsShowed) {
-            this.toggle()
-        }
-    }
-    toggle = () => {
-        const indexIsShowed = !this.state.indexIsShowed
-        this.setState({
-            indexIsShowed: indexIsShowed
-        })
-    }
-    showChildren = data => {
-        this.setState({
-            children: data
-        })
     }
     focus = uid => {
         this.setState({
@@ -56,6 +29,11 @@ class PageHeader extends PureComponent {
         localStorage['refresh'] = ''
         reloadUserData()
 
+    }
+    resetFocus = () => {
+        this.setState({
+            focus: null,
+        })
     }
     render() {
         return (
@@ -71,49 +49,51 @@ class PageHeader extends PureComponent {
                                 href: routeConstants.ROUTE_ROOT,
                             }]}
                         />
-                        <HoverWrapper
-                            rootComponent={<IconAndTextButton
-                                className='pointer'
-                                icons={[
-                                    { icon: 'arrow-down-icon icon24' },
-                                ]}
-                                texts={[{
-                                    text: 'DANH MỤC SÁCH',
-                                }]}
-                                revert={true}
-                                click={this.showIndex}
-                            />}
-                            childComponent={
-                                <div className='hover-table'>
-                                    {this.props.categories && this.props.categories.map && this.props.categories.map(item =>
-                                        <HoverWrapper
-                                            position='left'
-                                            rootComponent={<IndexItem
-                                                key={item.uid}
-                                                label={item.label}
-                                                children={item.children || null}
-                                                url={'/the-loai/' + item.uid}
-                                                onMouseOver={() => this.focus(item.uid)}
-                                                className={this.state.focus === item.uid ? 'focus' : ''}
-                                            />}
-                                            childComponent={
-                                                item.children && item.children.length && item.children.map && <div className='hover-table'>
-                                                    {item.children.map(child =>
-                                                        <IndexItem
-                                                            key={child.uid}
-                                                            label={child.label}
-                                                            children={child.children || null}
-                                                            url={'/the-loai/' + child.uid}
-                                                        />
-                                                    )}
-                                                </div>}
-                                        >
-                                        </HoverWrapper>
-                                    )}
-                                </div>
-                            }
-                        />
-
+                        <div onMouseLeave={this.resetFocus} className='flexbox'>
+                            <HoverWrapper
+                                toggle={this.props.toggle}
+                                rootComponent={<IconAndTextButton
+                                    className='pointer'
+                                    icons={[
+                                        { icon: 'arrow-down-icon icon24' },
+                                    ]}
+                                    texts={[{
+                                        text: 'DANH MỤC SÁCH',
+                                    }]}
+                                    revert={true}
+                                    click={this.showIndex}
+                                />}
+                                childComponent={
+                                    <div className='hover-table'>
+                                        {this.props.categories && this.props.categories.map && this.props.categories.map(item =>
+                                            <HoverWrapper
+                                                position='left'
+                                                rootComponent={<IndexItem
+                                                    key={item.uid}
+                                                    label={item.label}
+                                                    children={item.children || null}
+                                                    url={'/the-loai/' + item.uid}
+                                                    onMouseOver={() => this.focus(item.uid)}
+                                                    className={this.state.focus === item.uid ? 'focus' : ''}
+                                                />}
+                                                childComponent={
+                                                    item.children && item.children.length && item.children.map && <div className='hover-table'>
+                                                        {item.children.map(child =>
+                                                            <IndexItem
+                                                                key={child.uid}
+                                                                label={child.label}
+                                                                children={child.children || null}
+                                                                url={'/the-loai/' + child.uid}
+                                                            />
+                                                        )}
+                                                    </div>}
+                                            >
+                                            </HoverWrapper>
+                                        )}
+                                    </div>
+                                }
+                            />
+                        </div>
                         <Search
                             placeHolder='Bạn cần tìm gì ...'
                         />
