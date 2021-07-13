@@ -2,7 +2,6 @@ tensorflow
 pandas
 scipy
 sklearn
-dj_database_url
 appdirs==1.4.4
 asgiref==3.3.1
 autopep8==1.5.7
