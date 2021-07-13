@@ -1,5 +1,4 @@
 tensorflow
-pandas
 scipy
 sklearn
 appdirs==1.4.4
