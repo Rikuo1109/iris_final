@@ -9,6 +9,7 @@ whitenoise==5.2.0
 numpy==1.21.0
 pandas==1.2.3
 virtualenv==20.4.7
+psycopg2
 
 # tensorflow
 # scipy
