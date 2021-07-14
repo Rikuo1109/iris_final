@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include([
         path('auth/', include(user_urls.urlpatterns)),
-        # path('product/', include(product_urls.urlpatterns)),
+        path('product/', include(product_urls.urlpatterns)),
         path('interaction/', include(interaction_urls.urlpatterns))
     ]))
 ]
