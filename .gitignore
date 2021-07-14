@@ -7,6 +7,8 @@ cache
 /ems_api/resources
 env
 *.csv
+*/recommender
+insert.py
 
 ### Django ###
 *.log
