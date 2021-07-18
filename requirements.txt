@@ -11,6 +11,6 @@ pandas==1.2.3
 virtualenv==20.4.7
 psycopg2
 
-# tensorflow
+tensorflow-cpu
 # scipy
 # sklearn
