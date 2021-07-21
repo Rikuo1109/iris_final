@@ -7,7 +7,6 @@ from . import serializers, models, filters as product_filters
 
 # from utils.recomender.CB_model import cb as cb_filter
 
-
 class ProductViewSet(viewset.BaseView):
     permission_classes = [
         permissions.AllowAny,
@@ -88,6 +87,7 @@ class PopularProduct(generics.ListAPIView):
         return JsonResponse({"data": None, "error_code": 0})
 
 
+
 class AuthorView(generics.ListAPIView):
     queryset = models.Author.objects.order_by("name")
     serializer_class = serializers.AuthorSerializer
@@ -107,6 +107,7 @@ class AuthorView(generics.ListAPIView):
         except Exception as e:
             print(f"Exception while filtering: {e}")
         return JsonResponse({"data": None, "error_code": 0})
+
 
 
 class PublisherView(generics.ListAPIView):
