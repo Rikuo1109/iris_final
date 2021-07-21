@@ -14,7 +14,7 @@ from tensorflow.keras.utils import plot_model
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.losses import BinaryCrossentropy
 from functools import reduce
-from pandas import Series
+from pandas import Series, read_csv
 import numpy as np
 
 
@@ -64,6 +64,7 @@ class CFs:
             layers,
             input,
         )
+
 
 class ZeroShot(CFs):
     def __init__(self, size1=512, size2=256, gru_length=20):
@@ -208,7 +209,49 @@ class BCFNet(CFs):
         user_vec = np.repeat(
             user_data.reshape(1, self.user_size), item_data.shape[0], axis=0
         )
-        return self.model.predict([user_vec, item_data])
+        return self.model.predict([user_vec, item_data]).flatten()
+
 
 bcfRecommender = BCFNet()
-bcfRecommender.load('./models/bcfnet')
+bcfRecommender.load("./models/bcfnet")
+to_numpy = lambda x: np.fromstring(x.strip("[").strip("]").replace("\n", ""), sep=" ")
+description = read_csv("./models/bert_with_description_field.csv")["id", "proccessed"]
+description["proccessed"] = self._dataset["proccessed"].apply(to_numpy)
+
+
+def get_item_vector_by_uid(items):
+
+    # Get the table of item
+    # :param items: The list of items (type is product.Models.Book)
+    # :return: Table (with 2 column (id, feature)) of the items
+    return description[description["id"].isin(items.values_list("sku", flat=True))]
+
+
+def cf_filter(book_cat, booklist=[], num=None):
+    user_input = np.zeros((100))
+    for i in book_cat:
+        if (i >= 0) and (i < 100):
+            user_input[i] += 1
+    if np.sum(user_input) > 0:
+        user_input = user_input / np.sum(user_input)
+
+    book_table = get_item_vector_by_uid(booklist)
+
+    item_input = np.array(book_table.proccessed.to_list())
+
+    user_input = np.repeat(user_input.reshape((1, 100)), item_input.shape[0], axis=0)
+
+    scores = bcfRecommender.predict(user_input, item_input)
+    idx = (
+        scores.argsort()[-1 * num :][::-1]
+        if type(num) is int
+        else scores.argsort()[::-1]
+    )
+    skus = book_table.iloc[idx].id.to_list()
+
+    clauses = " ".join(["WHEN sku=%s THEN %s" % (pk, i) for i, pk in enumerate(skus)])
+    ordering = "CASE %s END" % clauses
+
+    return booklist.filter(sku__in=skus).extra(
+        select={"ordering": ordering}, order_by=("ordering",)
+    )

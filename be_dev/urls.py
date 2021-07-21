@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from user import urls as user_urls
+from user_account import urls as user_urls
 from product import urls as product_urls
 from interaction import urls as interaction_urls
 

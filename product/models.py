@@ -32,13 +32,13 @@ class Author(BaseModel):
 
 class Book(BaseModel):
     
-    name = models.CharField(default='Name of book', max_length=100, unique=False)
+    name = models.CharField(default='Name of book', max_length=1000, unique=False)
 
     price = models.IntegerField(default=0, validators=[validate_positive_number])
     first_price = models.IntegerField(default=0, validators=[validate_positive_number])
 
     short_description = models.CharField(default='', max_length=500)
-    description = models.CharField(default='', max_length=1000)
+    description = models.TextField(default='')
 
     number_pages = models.IntegerField(default=0, validators=[validate_positive_number] )
 
@@ -67,7 +67,7 @@ class Book(BaseModel):
 
 
 class Image(BaseModel):
-    url = models.CharField(max_length=200)
+    url = models.CharField(max_length=500)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     description = models.CharField(default='description of image', max_length=100)
 

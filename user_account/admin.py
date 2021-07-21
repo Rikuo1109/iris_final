@@ -3,7 +3,7 @@ from django.core import exceptions
 
 User = auth.get_user_model()
 
-def user_create(email, password, is_admin = False):
+def user_create(email, password, is_admin = False, is_superuser=False, *args, **kwargs):
     user = User.objects.create_user(
         email=email,
         password=password,
@@ -29,5 +29,5 @@ class BaseUserAdmin(admin.ModelAdmin):
             return super().save_model(request, obj, form, change)
         try:
             user_create(**form.cleaned_data)
-        except ValidationError as exc:
+        except Exception as exc:
             self.message_user(request, str(exc), messages.ERROR)

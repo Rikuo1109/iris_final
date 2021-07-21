@@ -10,14 +10,14 @@ INSTALLED_APPS += [
     'rest_framework_simplejwt.token_blacklist', # For logout 
 
 
-    'user',
+    'user_account',
 
     'product',
 
     'interaction',
 ]
 
-AUTH_USER_MODEL     = 'user.User'
+AUTH_USER_MODEL     = 'user_account.User'
 
 CACHES = {
     'default': {
