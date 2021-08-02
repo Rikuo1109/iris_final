@@ -212,11 +212,20 @@ class BCFNet(CFs):
         return self.model.predict([user_vec, item_data]).flatten()
 
 
-bcfRecommender = BCFNet()
-bcfRecommender.load("./models/bcfnet")
+bcfRecommender = BCFNet(
+    user_size=100,
+    item_size=768,
+    representation_layers=[512, 256, 128, 64],
+    balance_size=128,
+    matching_layers=[512, 256, 128, 64],
+    activation="relu",
+)
+bcfRecommender.load("./product/recommenders/bcfnet/mdl.ckpt")
 to_numpy = lambda x: np.fromstring(x.strip("[").strip("]").replace("\n", ""), sep=" ")
-description = read_csv("./models/bert_with_description_field.csv")["id", "proccessed"]
-description["proccessed"] = self._dataset["proccessed"].apply(to_numpy)
+description = read_csv("./product/recommenders/bert_with_description_field.csv")[
+    ["id", "proccessed"]
+]
+description["proccessed"] = description["proccessed"].apply(to_numpy)
 
 
 def get_item_vector_by_uid(items):
@@ -239,7 +248,7 @@ def cf_filter(book_cat, booklist=[], num=None):
 
     item_input = np.array(book_table.proccessed.to_list())
 
-    user_input = np.repeat(user_input.reshape((1, 100)), item_input.shape[0], axis=0)
+    # user_input = np.repeat(user_input.reshape((1, 100)), item_input.shape[0], axis=0)
 
     scores = bcfRecommender.predict(user_input, item_input)
     idx = (
@@ -255,3 +264,27 @@ def cf_filter(book_cat, booklist=[], num=None):
     return booklist.filter(sku__in=skus).extra(
         select={"ordering": ordering}, order_by=("ordering",)
     )
+
+def cf_filter_by_sku(book_cat, num=None): 
+    user_input = np.zeros((100))
+    for i in book_cat:
+        if (i >= 0) and (i < 100):
+            user_input[i] += 1
+    if np.sum(user_input) > 0:
+        user_input = user_input / np.sum(user_input)
+
+    book_table = description
+
+    item_input = np.array(book_table.proccessed.to_list())
+
+    # user_input = np.repeat(user_input.reshape((1, 100)), item_input.shape[0], axis=0)
+
+    scores = bcfRecommender.predict(user_input, item_input)
+    idx = (
+        scores.argsort()[-1 * num :][::-1]
+        if type(num) is int
+        else scores.argsort()[::-1]
+    )
+    skus = book_table.iloc[idx].id.to_list()
+
+    return skus

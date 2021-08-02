@@ -3,7 +3,7 @@ from utils import viewset, http_code
 from rest_framework import filters
 from utils.services import product as product_services
 from . import serializers, models, filters as product_filters
-
+from . import recommender
 
 # from utils.recomender.CB_model import cb as cb_filter
 
@@ -147,9 +147,9 @@ class RecommendProduct(generics.ListAPIView):
         user_interaction = Interaction.objects.filter(user=user).order_by("-updated_at")
 
         from django.http import JsonResponse
-
-        if len(user_interaction) < 3:
-            return JsonResponse({"data": None, "error_code": 0})
+        print(user_interaction)
+        # if len(user_interaction) <2 :
+        #     return JsonResponse({"data": None, "error_code": 0})
 
         rated_books = Book.objects.filter(
             uid__in=user_interaction.values_list("book__uid")
@@ -161,7 +161,7 @@ class RecommendProduct(generics.ListAPIView):
             sku__in=rated_books
         )
 
-        recommend_book = cf_filter(
+        recommend_book = recommender.cf_filter(
             categories.values_list("categories__cf_index", flat=True), recommend_book, 8
         )
 
@@ -185,6 +185,39 @@ class RecommendProduct(generics.ListAPIView):
         return JsonResponse({"data": None, "error_code": 0})
 
 
+class RecommendProductByIndex(generics.ListAPIView):
+    from rest_framework import pagination
+
+    queryset = models.Book.objects.all()
+    serializer_class = serializers.ItemSerializer
+    permission_classes = (permissions.AllowAny,)
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["name"]
+    # filter_backends = ()
+
+    def list(self, request):
+        # from interaction.models import Interaction
+        # from product.models import Book
+        from django.http import JsonResponse
+        
+        index_list = request.GET.get('index_list', '')
+        index_list = list(map(int,index_list.split(',')))
+        recommend_book = ','.join(map(str,recommender.cf_filter_by_sku(
+            index_list, 10
+        )))
+
+        try:
+            return JsonResponse(
+                {
+                    "data": {
+                        "sku_list": recommend_book,
+                    },
+                    "error_code": 0,
+                }
+            )
+        except Exception as e:
+            print(f"Exception while filtering: {e}")
+        return JsonResponse({"data": None, "error_code": 0})
 class RelatedProduct(generics.ListAPIView):
     from rest_framework import pagination
 
