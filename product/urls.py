@@ -19,4 +19,5 @@ urlpatterns = router.urls + [
     path("author/", views.AuthorView.as_view(), name="Authors"),
     path("publisher/", views.PublisherView.as_view(), name="Publisher"),
     path("related/", views.RelatedProduct.as_view(), name="Related Product"),
+    path("recommend_by_index/", views.RecommendProductByIndex.as_view(), name="Recommend by index"),
 ]
